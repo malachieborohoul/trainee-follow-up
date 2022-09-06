@@ -31,6 +31,61 @@
             <?= $this->include('partials/sidebar') ?>
 
             <?= $this->renderSection('content') ?>
+            <?= $this->section('scripts') ?>
+
+            <script>
+                // $(document).ready(function() {
+
+                //     //   setInterval(function() {
+                //     //     getNotifSuivre();
+
+                //     //   }, 5000);
+                //     //   getNotifSuivre();
+
+
+
+
+
+                // });
+
+
+
+
+                /**
+                 * Récevoir des notifications lorsqu'un membre a commencé à  suivre un autre
+                 *
+                 * @return void
+                 */
+                // function getNotifSuivre() {
+                //   $.ajax({
+                //     method: "GET",
+                //     url: "/getNotifSuivre",
+                //     data: "data",
+                //     dataType: "json",
+                //     success: function(response) {
+                //       console.log(response.notifEvents);
+                //       // console.log(response.notif);
+                //       // console.log(response.nombreNotif);
+                //       var nombreNotif = response.nombreNotif; //Nombre de notifications recu
+                //       var nombreNotifications = response.nombreNotif; //Nombre de notifications recu
+                //       $('.nombreNotif').html(nombreNotif);
+                //       $('.nombreNotifications').html(nombreNotifications + ' Notification(s)');
+                //       var notif = "";
+                //       $.each(response.notif, function(index, value) {
+                //         notif +=
+                //           '<a  href="/voirProfileMembre/' + value.idAbon + '" class="dropdown-item notific">\
+                //               <p style="display:none" class="suivreId">' + value.idSuivre + '</p>\
+                //               <i class="icon icon-users mr-2"></i>' + value.nom + ' a commencé à vous suivre\
+                //               <div class="dropdown-divider"></div>\
+                //             </a>';
+                //       });
+                //       $('.notif').html(notif);
+
+                //     }
+                //   });
+                // }
+            </script>
+            <?= $this->endSection() ?>
 
 
 
@@ -54,6 +109,73 @@
     </div>
     <!-- container-scroller -->
 
+    <script src="/assets/js/jquery-3.6.1.min.js"></script>
+
+
+    <script>
+        $(document).ready(function() {
+
+            // setInterval(function() {
+            //   getNotifSuivre();
+
+            // }, 5000);
+            // getNotifSuivre();
+
+
+            getAllAcceptedFolders();
+
+
+        });
+
+
+        /**
+         * Vérifier dans la table dossier_stage les dossiers qui ont été acceptés
+         * et envoyer un mail
+         *
+         * @return void
+         */
+
+        function getAllAcceptedFolders() {
+            $.ajax({
+                method: "GET",
+                url: "/getAllAcceptedFolders",
+                data: "data",
+                dataType: "json",
+                success: function(response) {
+                    //   console.log(response.acceptedFolders[0].email);
+
+                    $.each(response.acceptedFolders, function(index, value) {
+                        // console.log(value.email,value.nom, value.prenom, value.id_dossier_stage)
+                        sendMailIndustrialFramer(value.email, value.nom, value.prenom, value.id_dossier_stage);
+                    });
+
+                }
+            });
+        }
+
+        function sendMailIndustrialFramer(email, nom, prenom, id_dossier_stage) {
+            $.ajax({
+                method: "POST",
+                url: "/sendMailIndustrialFramer",
+                data: {
+                    'nom': nom,
+                    'prenom': prenom,
+                    'email': email,
+                    'id_dossier_stage': id_dossier_stage
+                },
+                dataType: "json",
+                success: function(response) {
+                    if (response.code == 1) {
+                       
+                        console.log(response.msg)
+                    } else {
+                        console.log(response.msg)
+
+                    }
+                }
+            });
+        }
+    </script>
 
 
 
@@ -79,5 +201,6 @@
     <script src="/assets/js/Chart.roundedBarCharts.js"></script>
     <!-- End custom js for this page-->
 </body>
+
 
 </html>
