@@ -145,15 +145,15 @@
                     //   console.log(response.acceptedFolders[0].email);
 
                     $.each(response.acceptedFolders, function(index, value) {
-                        // console.log(value.email,value.nom, value.prenom, value.id_dossier_stage)
-                        sendMailIndustrialFramer(value.email, value.nom, value.prenom, value.id_dossier_stage);
+                        console.log(value.email,value.nom, value.prenom, value.id_dossier_stage,value.id_enc)
+                        sendMailIndustrialFramer(value.email, value.nom, value.prenom, value.id_dossier_stage,value.id_enc);
                     });
 
                 }
             });
         }
 
-        function sendMailIndustrialFramer(email, nom, prenom, id_dossier_stage) {
+        function sendMailIndustrialFramer(email, nom, prenom, id_dossier_stage, id_encadreur) {
             $.ajax({
                 method: "POST",
                 url: "/sendMailIndustrialFramer",
@@ -161,7 +161,8 @@
                     'nom': nom,
                     'prenom': prenom,
                     'email': email,
-                    'id_dossier_stage': id_dossier_stage
+                    'id_dossier_stage': id_dossier_stage,
+                    'id_encadreur': id_encadreur,
                 },
                 dataType: "json",
                 success: function(response) {
