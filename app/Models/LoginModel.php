@@ -19,5 +19,39 @@ class LoginModel extends Model{
           return false;
       }
    }
+
+   public function verifyEmailSchoolFramer($pseudo)
+   {
+       $this->db=\Config\Database::connect();
+       $builder=$this->db->table('comptes');
+       $builder->select('*');
+       $builder->where('speudo', $pseudo);
+       $result= $builder->get();
+      if(count($result->getResultArray())==1)
+      {
+          return $result->getRowArray();
+      }
+      else{
+          return false;
+      }
+   }
+
+
+   public function verifyEmailStudent($pseudo)
+   {
+       $this->db=\Config\Database::connect();
+       $builder=$this->db->table('comptes');
+       $builder->select('*');
+       $builder->where('pseudo', $pseudo);
+       $result= $builder->get();
+      if(count($result->getResultArray())==1)
+      {
+          return $result->getRowArray();
+      }
+      else{
+          return false;
+      }
+   }
+
 }
 ?>

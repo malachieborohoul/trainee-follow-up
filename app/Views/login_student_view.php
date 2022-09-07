@@ -30,8 +30,8 @@
                 <img src="/assets/images/logo.svg" alt="logo">
               </div>
               <h4>Soyez la bienvenue</h4>
-              <h6 class="font-weight-light">Connectez vous en tant qu'encadreur industriel</h6>
-              <form action="/logIndustrialFramer" method="post" id="login" class="pt-3">
+              <h6 class="font-weight-light">Connectez vous en tant qu'étudiant</h6>
+              <form action="/login" method="post" id="login" class="pt-3">
                 <div class="form-group">
                   <input type="email" class="form-control form-control-lg email" name="email" id="email" placeholder="Adresse Email">
                   <span class="text-danger error-text email_error"></span>
@@ -44,7 +44,7 @@
                 </div>
 
                 <div class="form-group">
-                  <input type="hidden" class="form-control form-control-lg  " value="3" name="role" id="role" placeholder="Mot de passe">
+                  <input type="hidden" class="form-control form-control-lg  " value="1" name="role" id="role" placeholder="Mot de passe">
                 </div>
                 <div class="mt-3">
                   <button class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn">SE CONNECTER</button>
@@ -56,8 +56,9 @@
                       Gardez-moi connecté
                     </label>
                   </div>
-                  <a href="/loginStudent" class="auth-link text-black ">Je suis un étudiant?</a>
+                  <a href="/login" class="auth-link text-black ">Je suis un encadreur industriel?</a>
                   <a href="/loginSchoolFramer" class="auth-link text-black ">Je suis un encadreur école?</a>
+                  
                   <a href="#" class="auth-link text-black">Mot de passe oublié?</a>
                 </div>
 
@@ -127,6 +128,8 @@
     });
 
     
+   
+ 
   
 
    

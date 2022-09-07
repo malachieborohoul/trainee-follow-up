@@ -30,11 +30,11 @@
                 <img src="/assets/images/logo.svg" alt="logo">
               </div>
               <h4>Soyez la bienvenue</h4>
-              <h6 class="font-weight-light">Connectez vous en tant qu'encadreur industriel</h6>
-              <form action="/logIndustrialFramer" method="post" id="login" class="pt-3">
+              <h6 class="font-weight-light">Connectez vous en tant qu'encadreur école</h6>
+              <form action="/logSchoolFramer" method="post" id="login" class="pt-3">
                 <div class="form-group">
-                  <input type="email" class="form-control form-control-lg email" name="email" id="email" placeholder="Adresse Email">
-                  <span class="text-danger error-text email_error"></span>
+                  <input type="text" class="form-control form-control-lg email" name="pseudo" id="pseudo" placeholder="Pseudo">
+                  <span class="text-danger error-text pseudo_error"></span>
 
                 </div>
                 <div class="form-group">
@@ -44,7 +44,7 @@
                 </div>
 
                 <div class="form-group">
-                  <input type="hidden" class="form-control form-control-lg  " value="3" name="role" id="role" placeholder="Mot de passe">
+                  <input type="hidden" class="form-control form-control-lg  " value="2" name="role" id="role" placeholder="Mot de passe">
                 </div>
                 <div class="mt-3">
                   <button class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn">SE CONNECTER</button>
@@ -57,7 +57,7 @@
                     </label>
                   </div>
                   <a href="/loginStudent" class="auth-link text-black ">Je suis un étudiant?</a>
-                  <a href="/loginSchoolFramer" class="auth-link text-black ">Je suis un encadreur école?</a>
+                  <a href="/login" class="auth-link text-black ">Je suis un encadreur industriel?</a>
                   <a href="#" class="auth-link text-black">Mot de passe oublié?</a>
                 </div>
 
@@ -127,6 +127,8 @@
     });
 
     
+   
+ 
   
 
    
