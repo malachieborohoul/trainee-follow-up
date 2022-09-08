@@ -24,6 +24,7 @@ class Home extends BaseController
 
     public function index()
     {
+        
         // $stu = $this->homeModel->getAllStudents();
         // foreach($stu as $s){
         //     $this->homeModel->updatePasswordStudent($s['matricule'],password_hash($s['matricule'], PASSWORD_BCRYPT));
@@ -41,13 +42,13 @@ class Home extends BaseController
             return redirect()->to('/login');
         }
         else{
-            if(session()->has('loggedUserRole') == 1){
+            if(session()->get('loggedUserRole') == 1){
                 $data['student_data'] = $this->homeModel->getLoggedInStudentData($idUser); //Récupère toutes les infos du user
-            }elseif(session()->has('loggedUserRole') == 2){
+            }elseif(session()->get('loggedUserRole') == 2){
                 $data['school_framer_data'] = $this->homeModel->getLoggedInSchoolFramerData($idUser); //Récupère toutes les infos du user
 
 
-            }elseif(session()->has('loggedUserRole') == 3){
+            }elseif(session()->get('loggedUserRole') == 3){
                 $data['industrial_framer_data'] = $this->homeModel->getLoggedInIndustrialFramerData($idUser); //Récupère toutes les infos du user
 
             }else{

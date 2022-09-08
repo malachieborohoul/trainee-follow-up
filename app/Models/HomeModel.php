@@ -34,6 +34,7 @@ class HomeModel extends Model{
           return false;
       }
    }
+   
    public function getLoggedInStudentData($idUser)
    {
        $this->db=\Config\Database::connect();
