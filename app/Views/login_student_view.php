@@ -31,10 +31,10 @@
               </div>
               <h4>Soyez la bienvenue</h4>
               <h6 class="font-weight-light">Connectez vous en tant qu'étudiant</h6>
-              <form action="/login" method="post" id="login" class="pt-3">
+              <form action="/logStudent" method="post" id="login" class="pt-3">
                 <div class="form-group">
-                  <input type="email" class="form-control form-control-lg email" name="email" id="email" placeholder="Adresse Email">
-                  <span class="text-danger error-text email_error"></span>
+                  <input type="text" class="form-control form-control-lg matricule" name="matricule" id="matricule" placeholder="Matricule">
+                  <span class="text-danger error-text matricule_error"></span>
 
                 </div>
                 <div class="form-group">

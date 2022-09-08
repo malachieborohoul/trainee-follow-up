@@ -24,13 +24,38 @@ class Home extends BaseController
 
     public function index()
     {
+        // $stu = $this->homeModel->getAllStudents();
+        // foreach($stu as $s){
+        //     $this->homeModel->updatePasswordStudent($s['matricule'],password_hash($s['matricule'], PASSWORD_BCRYPT));
+        // }
+        //Récupérer l'id stocké lors de la définition de la session
+        $idUser = session()->get('loggedUser');
+        $data['student_data']=[];
+        $data['school_framer_data']=[];
+        $data['industrial_framer_data']=[];
+
         /**
          * Vérifie si une session a été créée
          */
         if (!session()->has('loggedUser')) {
-			return redirect()->to('/login');
-		}
-        return view('home_view');
+            return redirect()->to('/login');
+        }
+        else{
+            if(session()->has('loggedUserRole') == 1){
+                $data['student_data'] = $this->homeModel->getLoggedInStudentData($idUser); //Récupère toutes les infos du user
+            }elseif(session()->has('loggedUserRole') == 2){
+                $data['school_framer_data'] = $this->homeModel->getLoggedInSchoolFramerData($idUser); //Récupère toutes les infos du user
+
+
+            }elseif(session()->has('loggedUserRole') == 3){
+                $data['industrial_framer_data'] = $this->homeModel->getLoggedInIndustrialFramerData($idUser); //Récupère toutes les infos du user
+
+            }else{
+                return redirect()->to('/login');
+            }
+        }
+
+        return view('home_view', $data);
     }
 
     /**
@@ -459,7 +484,7 @@ class Home extends BaseController
                 $status = $this->homeModel->updateStatutEmail($id_dossier_stage);
                 if ($status) {
                     $statusPass = $this->homeModel->updatePasswordEncadreur($id_encadreur, password_hash($password, PASSWORD_BCRYPT));
-                    if($statusPass){
+                    if ($statusPass) {
                         echo json_encode(['code' => 1, 'msg' => "Un mail vous été envoyé "]);
                     }
                 } else {

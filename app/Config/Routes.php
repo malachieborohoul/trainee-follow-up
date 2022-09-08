@@ -44,6 +44,7 @@ $routes->get('/getAllAcceptedFolders', 'Home::getAllAcceptedFolders');
 $routes->post('/sendMailIndustrialFramer', 'Home::sendMailIndustrialFramer');
 $routes->post('/logIndustrialFramer', 'Login::logIndustrialFramer');
 $routes->post('/logSchoolFramer', 'Login::logSchoolFramer');
+$routes->post('/logStudent', 'Login::logStudent');
 
 
 /*
