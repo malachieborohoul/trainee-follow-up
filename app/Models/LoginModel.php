@@ -37,12 +37,14 @@ class LoginModel extends Model{
    }
 
 
-   public function verifyEmailStudent($pseudo)
+   
+
+   public function verifyMatricule($matricule)
    {
        $this->db=\Config\Database::connect();
-       $builder=$this->db->table('comptes');
+       $builder=$this->db->table('etudiants');
        $builder->select('*');
-       $builder->where('pseudo', $pseudo);
+       $builder->where('matricule', $matricule);
        $result= $builder->get();
       if(count($result->getResultArray())==1)
       {
@@ -52,6 +54,7 @@ class LoginModel extends Model{
           return false;
       }
    }
+
 
 }
 ?>

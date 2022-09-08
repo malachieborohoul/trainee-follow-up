@@ -32,6 +32,8 @@ class Login extends BaseController
         return view('login_student_view');
     }
 
+
+
     /** 
      * Connecter un encadreur industriel 
      */
@@ -85,6 +87,8 @@ class Login extends BaseController
                      * sans s'être connectés
                      */
                     session()->set('loggedUser', $status['id_enc']);
+                    session()->set('loggedUserRole', 3);
+
                     return json_encode(['code' => 1, 'msg' => 'Bienvenue ']);
                     // return redirect()->to(base_url().'/public/accueil');
 
@@ -153,6 +157,7 @@ class Login extends BaseController
                      * sans s'être connectés
                      */
                     session()->set('loggedUser', $status['id_compte']);
+                    session()->set('loggedUserRole', 2);
                     return json_encode(['code' => 1, 'msg' => 'Bienvenue ']);
                     // return redirect()->to(base_url().'/public/accueil');
 
@@ -168,4 +173,70 @@ class Login extends BaseController
             }
         }
     }
+
+    /** 
+     * Connecter un encadreur industriel 
+     */
+    public function logStudent()
+    {
+        $data = [];
+        $data['validation'] = null;
+        $this->validate([
+            'matricule' => [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => "Matricule est requis",
+
+                ],
+            ],
+     
+            'password' => [
+                'rules' => 'required',
+                'errors' => [
+                    'required' => "Mot de passe est requis",
+                ],
+            ],
+        ]);
+        $password = $this->request->getVar('password');
+        $matricule = $this->request->getVar('matricule');
+      
+
+        if ($this->validation->run() == FALSE) {
+            $errors = $this->validation->getErrors();
+            return json_encode(['code' => 0, 'error' => $errors]);
+        } else {
+
+
+
+
+
+
+            $status = $this->loginModel->verifyMatricule($matricule);
+            if ($status) {
+                if (password_verify($password, $status['password'])) {
+                    /**
+                     * Définie une session loggedUser avec l'id de l'encadreur
+                     * Cette session va nous permettre de savoir qui est connecté
+                     * et de rédiriger ceux qui voudraient accéder à l'accueil
+                     * sans s'être connectés
+                     */
+                    session()->set('loggedUser', $status['id_etudiant']);
+                    session()->set('loggedUserRole', 1);
+
+                    return json_encode(['code' => 1, 'msg' => 'Bienvenue ']);
+                    // return redirect()->to(base_url().'/public/accueil');
+
+
+                } else {
+                    return json_encode(['code' => 0, 'msg' => 'Mot de passe incorrect']);
+
+                    // session()->setTempdata('error', 'Mot de passe incorrect', 3);
+                }
+            } else {
+                // session()->setTempdata('error', 'Email inconnu', 3);
+                return json_encode(['code' => 0, 'msg' => 'Matricule incorrecte']);
+            }
+        }
+    }
+
 }
