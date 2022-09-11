@@ -145,7 +145,7 @@
                     //   console.log(response.acceptedFolders[0].email);
 
                     $.each(response.acceptedFolders, function(index, value) {
-                        console.log(value.email,value.nom, value.prenom, value.id_dossier_stage,value.id_enc)
+                        // console.log(value.email,value.nom, value.prenom, value.id_dossier_stage,value.id_enc)
                         sendMailIndustrialFramer(value.email, value.nom, value.prenom, value.id_dossier_stage,value.id_enc);
                     });
 

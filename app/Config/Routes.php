@@ -40,11 +40,15 @@ $routes->get('/login', 'Login::index');
 $routes->get('/loginSchoolFramer', 'Login::loginSchoolFramer');
 $routes->get('/loginStudent', 'Login::loginStudent');
 $routes->get('/getAllAcceptedFolders', 'Home::getAllAcceptedFolders');
+$routes->get('/getAllTasks', 'Task::getAllTasks');
+
 
 $routes->post('/sendMailIndustrialFramer', 'Home::sendMailIndustrialFramer');
 $routes->post('/logIndustrialFramer', 'Login::logIndustrialFramer');
 $routes->post('/logSchoolFramer', 'Login::logSchoolFramer');
 $routes->post('/logStudent', 'Login::logStudent');
+$routes->post('/updateStatutToInProgress', 'Task::updateStatutToInProgress');
+$routes->post('/updateStatutToCancel', 'Task::updateStatutToCancel');
 
 
 /*
