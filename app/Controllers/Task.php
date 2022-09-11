@@ -79,5 +79,21 @@ class Task extends BaseController
 		$this->taskModel->updateStatutToCancel($taskId);
 	}
 
+
+    
+   /**
+	 * Rechercher s'il y a une tâche en cours => id_tache = 1
+     * Une seule tâche peut être en cours
+	 *
+	 * @return void
+	 */
+	public function fetchInProgressTask()
+	{
+        
+		$data['task'] =$this->taskModel->fetchInProgressTask();
+
+		echo json_encode($data);
+	}
+
     
 }

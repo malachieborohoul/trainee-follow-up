@@ -41,6 +41,7 @@ $routes->get('/loginSchoolFramer', 'Login::loginSchoolFramer');
 $routes->get('/loginStudent', 'Login::loginStudent');
 $routes->get('/getAllAcceptedFolders', 'Home::getAllAcceptedFolders');
 $routes->get('/getAllTasks', 'Task::getAllTasks');
+$routes->get('/fetchInProgressTask', 'Task::fetchInProgressTask');
 
 
 $routes->post('/sendMailIndustrialFramer', 'Home::sendMailIndustrialFramer');

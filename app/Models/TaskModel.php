@@ -44,6 +44,23 @@ class TaskModel extends Model{
       }
     }
 
+    public function fetchInProgressTask()
+   {
+       $this->db=\Config\Database::connect();
+       $builder=$this->db->table('taches');
+       $builder->select('*');
+       $builder->where('statut', 1);
+       $result= $builder->get();
+      if(count($result->getResultArray())==1)
+      {
+          return $result->getRowArray();
+      }
+      else{
+          return false;
+      }
+   }
+
+
 
   
 
