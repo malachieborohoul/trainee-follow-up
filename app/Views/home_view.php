@@ -1,5 +1,11 @@
 <?= $this->extend('layouts/main') ?>
 
+<?= $this->section('id_student') ?>
+<?php if (isset($student_data->id_etudiant)) : ?>
+    <?= $student_data->id_etudiant ?>
+    <?php endif ?>
+<?= $this->endSection() ?>
+
 <?= $this->section('content') ?>
 <!-- partial -->
 <div class="main-panel">
@@ -8,7 +14,7 @@
             <div class="col-md-12 grid-margin">
                 <div class="row">
                     <div class="col-12 col-xl-8 mb-4 mb-xl-0">
-                        <h3 class="font-weight-bold">Welcome
+                        <h3 class="font-weight-bold">Bienvenue
                             <!-- Etudiant -->
                             <?php if ($student_data) : ?>
                                 <?= $student_data->nom_prenom ?>
@@ -32,7 +38,7 @@
 
                             <?php endif; ?>
                         </h3>
-                        <h6 class="font-weight-normal mb-0">All systems are running smoothly! You have <span class="text-primary">3 unread alerts!</span></h6>
+                        <h6 class="font-weight-normal mb-0">Vous avez <span class="text-primary">3 notifications non lues!</span></h6>
                     </div>
                     <div class="col-12 col-xl-4">
                         <div class="justify-content-end d-flex">
@@ -54,7 +60,14 @@
         </div>
 
 
-        <?= $this->include("/partials/tasks") ?>
+        <!-- Etudiant -->
+        <?php if ($student_data) : ?>
+            <?= $this->include("/partials/tasks") ?>
+
+        <?php else : ?>
+
+        <?php endif; ?>
+        
 
 
         <?= $this->include("/partials/slider") ?>

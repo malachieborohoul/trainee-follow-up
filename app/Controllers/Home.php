@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\HomeModel;
+use App\Models\TaskModel;
 
 class Home extends BaseController
 {
@@ -18,13 +19,17 @@ class Home extends BaseController
 
         // On instancie en créant un objet de type HomeModel
         $this->homeModel = new HomeModel();
+        $this->taskModel = new TaskModel();
 
         $this->email = \Config\Services::email();
     }
 
     public function index()
     {
-        
+
+		// $task=$this->taskModel->checkTaskFileSubmitted(session()->get('loggedUser'),session()->get('currentTask'));
+        // var_dump($task['doc']);
+    //    var_dump(session()->get('currentTask')) ;
         // $stu = $this->homeModel->getAllStudents();
         // foreach($stu as $s){
         //     $this->homeModel->updatePasswordStudent($s['matricule'],password_hash($s['matricule'], PASSWORD_BCRYPT));
@@ -498,4 +503,15 @@ class Home extends BaseController
             echo json_encode($data);
         }
     }
+
+    /**
+     * Se déconnecter
+     */
+    public function logout()
+    {
+        session()->remove('loggedUser');
+        session()->destroy();
+        return redirect()->to('/');
+    }
+
 }

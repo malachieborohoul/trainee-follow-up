@@ -146,7 +146,7 @@
 
                     $.each(response.acceptedFolders, function(index, value) {
                         // console.log(value.email,value.nom, value.prenom, value.id_dossier_stage,value.id_enc)
-                        sendMailIndustrialFramer(value.email, value.nom, value.prenom, value.id_dossier_stage,value.id_enc);
+                        sendMailIndustrialFramer(value.email, value.nom, value.prenom, value.id_dossier_stage, value.id_enc);
                     });
 
                 }
@@ -167,7 +167,7 @@
                 dataType: "json",
                 success: function(response) {
                     if (response.code == 1) {
-                       
+
                         console.log(response.msg)
                     } else {
                         console.log(response.msg)
@@ -201,6 +201,9 @@
     <script src="/assets/js/dashboard.js"></script>
     <script src="/assets/js/Chart.roundedBarCharts.js"></script>
     <!-- End custom js for this page-->
+    <!-- Sweet Alert -->
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
 </body>
 
 

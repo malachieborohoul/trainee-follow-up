@@ -8,6 +8,8 @@
                     <div class="card-body">
                         <p class="mb-4">Tâche courante</p>
                         <p class="fs-30 mb-2 current_task"></p>
+                        <p class="fs-30 mb-2 current_id " style="display: none;"><?= $this->renderSection('id_student') ?></p>
+
                     </div>
                 </div>
             </div>
@@ -27,7 +29,7 @@
                         <p class="mb-4">Date limite</p>
                         <div id="countdown">
                             <span class="fs-30 mb-2" id="countdown_day">--</span> jours
-                            <span class="fs-30 mb-2"  id="countdown_hour">--</span> heures
+                            <span class="fs-30 mb-2" id="countdown_hour">--</span> heures
                             <span class="fs-30 mb-2" id="countdown_min">--</span> minutes
                             <span class="fs-30 mb-2" id="countdown_sec">--</span> secondes
                         </div>
@@ -60,9 +62,8 @@
                         <thead>
                             <tr>
                                 <th>Tâche</th>
-                                <th>Price</th>
                                 <th>Date limite</th>
-                                <th>Statut</th>
+                                <th>Etat</th>
                             </tr>
                         </thead>
                         <tbody class="tasksdata">
@@ -118,11 +119,14 @@
     La définition de la fonction qui récupère toues les tâches de la base de données
      */
     function getAllTasks() {
+        var id = $('.current_id').text();
 
         $.ajax({
-            method: "GET",
+            method: "POST",
             url: "getAllTasks",
-
+            data: {
+                'id': id
+            },
             dataType: "json",
 
             success: function(response) {
@@ -130,14 +134,14 @@
                 var html = "";
 
                 $.each(response.tasks, function(key, value) {
-
+                    // console.log(response.tasks)
                     // console.log(value['email']) ;
                     /**
-                     * Si le statut est égale à 0 on envoie le code couleur rouge et le message
+                     * Si le etat est égale à 0 on envoie le code couleur rouge et le message
                      * EN ATTENTE
                      *  */
-                    if (value['statut'] == 0) {
-                        var str = 'badge badge-danger statut_btn';
+                    if (value['etat'] == 0) {
+                        var str = 'badge badge-danger etat_btn';
                         var msg = 'En attente';
                         var colorTable = ""
 
@@ -151,20 +155,24 @@
                          *  */
                         var visibilityDropdown = response.visibility != 0 ? "display:none" : ""
                         /**
-                         * Si statut aucune n'a démarré alors les visibilités des bouttons TERMINER et ANNULER seront
+                         * Si etat aucune n'a démarré alors les visibilités des bouttons TERMINER et ANNULER seront
                          * désactivées et celle des texts seront activé
                          */
-                        var visibilityItemLink = "display:none"
-                        var visibilityItemText = ""
+                        var visibilityItemLinkCancel = "display:none"
+                        var visibilityItemTextCancel = ""
+
+                        var visibilityItemLinkCompleted = "display:none"
+                        var visibilityItemTextCompleted = ""
                         /**
-                         * Si statut aucune n'a démarré alors la visibilité du boutton COMMENCER sera
+                         * Si etat aucune n'a démarré alors la visibilité du boutton COMMENCER sera
                          * activée et celle du text sera désactivé donnat l'occasion de le cliquer
                          */
                         var visibilityItemLinkStart = ""
                         var visibilityItemTextStart = "display:none"
 
 
-                    } else if (value['statut'] == 1) {
+
+                    } else if (value['etat'] == 1) {
                         var str = 'badge badge-warning ';
                         var msg = 'En cours';
                         var colorTable = "table-secondary"
@@ -175,34 +183,49 @@
                         /**
                          * Les bouttons TERMINER et ANNULER seront activés i.e cliquables
                          */
-                        var visibilityItemLink = ""
-                        var visibilityItemText = "display:none"
+                        var visibilityItemLinkCancel = ""
+                        var visibilityItemTextCancel = "display:none"
+
+                        var visibilityItemLinkCompleted = ""
+                        var visibilityItemTextCompleted = "display:none"
                         /** 
                          * Le boutton de COMMENCER sera désactivé
                          */
                         var visibilityItemLinkStart = "display:none"
                         var visibilityItemTextStart = ""
 
+                    }else  if (value['etat'] == 2){
+                        var str = 'badge badge-success ';
+                        var msg = 'Terminé';
+                        var colorTable = "table-success"
+                        /**
+                         * Si une tâche est en cours le dropdown est activé
+                         */
+                        var visibilityDropdown = ""
+                        /**
+                         * Les bouttons TERMINER et ANNULER seront activés i.e cliquables
+                         */
+                        var visibilityItemLinkCancel = ""
+                        var visibilityItemTextCancel = "display:none"
 
+                        var visibilityItemLinkCompleted = "display:none"
+                        var visibilityItemTextCompleted = ""
+                        /** 
+                         * Le boutton de COMMENCER sera désactivé
+                         */
+                        var visibilityItemLinkStart = "display:none"
+                        var visibilityItemTextStart = ""
 
-
-
+                    }else{
 
                     }
 
-                    if (value['idRole'] == 1) {
-                        var st = 'USER';
-                    } else {
-                        var st = 'ADMIN';
-
-                    }
-
+                   
 
                     html +=
                         '<tr class="' + colorTable + '">\
                         <td class="taskId" style="display:none">' + value['id_tache'] + '</td>\
                         <td>' + value['tache'] + '</td>\
-                        <td class="font-weight-bold">$362</td>\
                         <td>' + value['date_limite'] + '</td>\
                         <td class="font-weight-medium">\
                             <div class="' + str + '">' + msg + '</div>\
@@ -216,10 +239,10 @@
                                     <h6 class="dropdown-header text-primary ">Actions</h6>\
                                     <a class="dropdown-item start_btn"  style="' + visibilityItemLinkStart + '">Commencer</a>\
                                     <h6 class="dropdown-header text-secondary" style="' + visibilityItemTextStart + '">Commencer</h6>\
-                                    <a class="dropdown-item" style="' + visibilityItemLink + '" >Terminer</a>\
-                                    <h6 class="dropdown-header text-secondary" style="' + visibilityItemText + '">Terminer</h6>\
-                                    <a class="dropdown-item cancel_btn" style="' + visibilityItemLink + '" >Annuler</a>\
-                                    <h6 class="dropdown-header text-secondary" style="' + visibilityItemText + '">Annuler</h6>\
+                                    <a class="dropdown-item completed_btn " style="' + visibilityItemLinkCompleted + '" >Terminer</a>\
+                                    <h6 class="dropdown-header text-secondary" style="' + visibilityItemTextCompleted + '">Terminer</h6>\
+                                    <a class="dropdown-item cancel_btn" style="' + visibilityItemLinkCancel + '" >Annuler</a>\
+                                    <h6 class="dropdown-header text-secondary" style="' + visibilityItemTextCancel + '">Annuler</h6>\
                                 </div>\
                             </div>\
                         </td>\
@@ -250,7 +273,7 @@
         // alert(taskId);
         $.ajax({
             method: "POST",
-            url: "/updateStatutToInProgress",
+            url: "/updateEtatToInProgress",
             data: {
                 'taskId': taskId
             },
@@ -274,13 +297,15 @@
             }
         });
     });
+    //Lorsqu'on clique sur Annuler
+
 
     $(document).on('click', '.cancel_btn', function() {
         var taskId = $(this).closest('tr').find('.taskId').text();
         // alert(taskId);
         $.ajax({
             method: "POST",
-            url: "/updateStatutToCancel",
+            url: "/updateEtatToCancel",
             data: {
                 'taskId': taskId
             },
@@ -302,6 +327,51 @@
             }
         });
     });
+
+    //Lorsqu'on clique sur Terminer
+
+    $(document).on('click', '.completed_btn', function() {
+
+        var taskId = $(this).closest('tr').find('.taskId').text();
+        // alert(taskId);
+        $.ajax({
+            method: "POST",
+            url: "/updateEtatToCompleted",
+            data: {
+                'taskId': taskId
+            },
+            dataType: "json",
+
+            beforeSend: function() {
+                $(".spinner").append(
+                    '<div class="spinner-border text-primary"  role="status">\
+        <span class="sr-only">Loading...</span>\
+    </div>'
+                );
+
+            },
+
+            success: function(response) {
+
+                if (response.code == 0) {
+                    swal(""+response.msg+"", "Cliquer sur le boutton!", "error");
+                    
+                    
+                } else {
+                    swal(""+response.msg+"", "Cliquer sur le boutton!", "success");
+
+                }
+                $('.spinner').html("");
+                $('.tasksdata').html("");
+
+
+                getAllTasks();
+                fetchInProgressTask()
+
+            }
+        });
+    });
+
 
 
     /** 
@@ -312,15 +382,19 @@
         $('.task_state').html("")
         $('.deadline').html("")
         $('.progression').html("")
+        var id = $('.current_id').text();
+
 
         $.ajax({
-            method: "GET",
+            method: "POST",
             url: "/fetchInProgressTask",
-
+            data: {
+                'id': id
+            },
             dataType: "json",
 
             success: function(response) {
-                console.log(response.task);
+                // console.log(response.task);
 
                 if (response.task == false) {
                     $('.current_task').append("En attente")
@@ -330,7 +404,7 @@
                     countdownManager.targetTime = new Date()
                     countdownManager.init()
                 } else {
-                    diffDate(new Date(response.task.date_limite), new Date(response.task.date_soumission))
+                    // diffDate(new Date(response.task.date_limite), new Date(response.task.date_soumission))
 
                     $('.current_task').append("" + response.task.tache + "")
                     $('.task_state').append("En cours")
@@ -346,7 +420,7 @@
     }
 
 
-    
+
 
 
     countdownManager = {

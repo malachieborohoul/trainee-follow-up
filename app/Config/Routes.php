@@ -36,20 +36,27 @@ $routes->set404Override();
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
 $routes->get('/', 'Home::index');
+$routes->get('/logout', 'Home::logout');
 $routes->get('/login', 'Login::index');
 $routes->get('/loginSchoolFramer', 'Login::loginSchoolFramer');
 $routes->get('/loginStudent', 'Login::loginStudent');
 $routes->get('/getAllAcceptedFolders', 'Home::getAllAcceptedFolders');
-$routes->get('/getAllTasks', 'Task::getAllTasks');
 $routes->get('/fetchInProgressTask', 'Task::fetchInProgressTask');
+$routes->get('/uploadFile', 'Task::uploadFile');
+$routes->get('/checkTaskFileSubmitted', 'Task::checkTaskFileSubmitted');
 
 
 $routes->post('/sendMailIndustrialFramer', 'Home::sendMailIndustrialFramer');
 $routes->post('/logIndustrialFramer', 'Login::logIndustrialFramer');
 $routes->post('/logSchoolFramer', 'Login::logSchoolFramer');
 $routes->post('/logStudent', 'Login::logStudent');
-$routes->post('/updateStatutToInProgress', 'Task::updateStatutToInProgress');
-$routes->post('/updateStatutToCancel', 'Task::updateStatutToCancel');
+$routes->post('/updateEtatToInProgress', 'Task::updateEtatToInProgress');
+$routes->post('/updateEtatToCancel', 'Task::updateEtatToCancel');
+$routes->post('/updateEtatToCompleted', 'Task::updateEtatToCompleted');
+$routes->post('/getAllTasks', 'Task::getAllTasks');
+$routes->post('/fetchInProgressTask', 'Task::fetchInProgressTask');
+$routes->post('/editTaskFile', 'Task::editTaskFile');
+
 
 
 /*
