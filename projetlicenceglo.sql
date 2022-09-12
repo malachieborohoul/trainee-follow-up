@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : jeu. 08 sep. 2022 à 14:25
+-- Généré le : lun. 12 sep. 2022 à 13:32
 -- Version du serveur : 10.4.24-MariaDB
 -- Version de PHP : 8.1.6
 
@@ -1181,6 +1181,19 @@ CREATE TABLE `document_stage` (
   `id_tache` int(11) NOT NULL,
   `id_dossier_stage` int(11) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `doc_tache`
+--
+
+CREATE TABLE `doc_tache` (
+  `id_doc_tache` int(11) NOT NULL,
+  `tache_id` int(11) NOT NULL,
+  `etudiant_id` int(11) NOT NULL,
+  `len` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -5320,15 +5333,23 @@ INSERT INTO `surveiller` (`id_surveiller`, `examen_id`, `personnel_id`) VALUES
 
 CREATE TABLE `taches` (
   `id_tache` int(11) NOT NULL,
-  `tache` int(11) NOT NULL,
-  `date_soumission` date NOT NULL,
-  `date_limitte` date NOT NULL,
-  `affecteur` varchar(60) NOT NULL,
-  `Etat` tinyint(1) NOT NULL,
+  `tache` varchar(255) NOT NULL,
+  `date_soumission` datetime NOT NULL DEFAULT current_timestamp(),
+  `date_limite` datetime NOT NULL,
+  `etat` int(15) NOT NULL DEFAULT 0,
   `id_enc` int(11) NOT NULL,
   `id_personnel` int(11) NOT NULL,
-  `id_dossier_stage` int(11) NOT NULL
+  `id_dossier_stage` int(11) NOT NULL,
+  `doc` varchar(255) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+
+--
+-- Déchargement des données de la table `taches`
+--
+
+INSERT INTO `taches` (`id_tache`, `tache`, `date_soumission`, `date_limite`, `etat`, `id_enc`, `id_personnel`, `id_dossier_stage`, `doc`) VALUES
+(1, 'Déssiner le diagramme de classe', '2022-09-11 00:00:00', '2022-09-13 00:00:00', 0, 3, 0, 1, ''),
+(2, 'Réaliser le cadrage pragmatique', '2022-09-11 00:00:00', '2022-09-14 00:00:00', 0, 3, 0, 1, 'http://localhost:8080/importer/taches/1662974114_d2b0bea36a01ab7facf2.pdf');
 
 -- --------------------------------------------------------
 
@@ -5872,6 +5893,12 @@ ALTER TABLE `document_stage`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Index pour la table `doc_tache`
+--
+ALTER TABLE `doc_tache`
+  ADD PRIMARY KEY (`id_doc_tache`);
+
+--
 -- Index pour la table `dossiers`
 --
 ALTER TABLE `dossiers`
@@ -6031,6 +6058,12 @@ ALTER TABLE `document_stage`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT pour la table `doc_tache`
+--
+ALTER TABLE `doc_tache`
+  MODIFY `id_doc_tache` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT pour la table `dossier_stage`
 --
 ALTER TABLE `dossier_stage`
@@ -6070,7 +6103,7 @@ ALTER TABLE `sujet_forum`
 -- AUTO_INCREMENT pour la table `taches`
 --
 ALTER TABLE `taches`
-  MODIFY `id_tache` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_tache` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT pour la table `users`
