@@ -20,6 +20,8 @@ class Home extends BaseController
         // On instancie en créant un objet de type HomeModel
         $this->homeModel = new HomeModel();
         $this->taskModel = new TaskModel();
+        $this->validation = \Config\Services::validation();
+
 
         $this->email = \Config\Services::email();
     }
@@ -512,6 +514,230 @@ class Home extends BaseController
         session()->remove('loggedUser');
         session()->destroy();
         return redirect()->to('/');
+    }
+
+
+    public function editProfile()
+    {
+
+		
+
+        return view('edit_profile_view');
+    }
+
+    public function editPassword()
+    {
+        // $data['userdata'] = $this->userModel->getLoggedInUserData(session()->get('loggedUser'));
+        $idUser = session()->get('loggedUser');
+        $data['student_data']=[];
+        $data['school_framer_data']=[];
+        $data['industrial_framer_data']=[];
+
+        /**
+         * Vérifie si une session a été créée
+         */
+       
+            if(session()->get('loggedUserRole') == 1){
+                $data['student_data'] = $this->homeModel->getLoggedInStudentData($idUser); //Récupère toutes les infos du user
+                $this->validate([
+                    'oldpassword' => [
+                        'rules' => 'required|is_unique[etudiants.password]',
+                        'errors' => [
+                            'required' => 'Veuillez remplir le champs',
+                            'matches[etudiants.password]' => 'Ancien mot de passe incorrect',
+                        ],
+                    ],
+                    'newpassword' => [
+                        'rules' => 'required|min_length[6]|max_length[10]',
+                        'errors' => [
+                            'required' => 'Veuillez remplir le champs',
+                            'min_length' => 'Minimum 6 caractères',
+                            'max_length' => 'Pas au déla de 10 caractères'
+                        ],
+                    ],
+                    'cnewpassword' => [
+                        'rules' => 'required|matches[newpassword]',
+                        'errors' => [
+                            'required' => 'Veuillez remplir le champs',
+                            'matches' => "Mot de passe incompatible",
+                        ],
+                    ],
+                ]);
+        
+                if ($this->validation->run() == FALSE) {
+                    $errors = $this->validation->getErrors();
+                    echo json_encode(['error' => $errors]);
+                } else {
+                    $oldpassword = $this->request->getVar('oldpassword');
+
+                    $newpassword = password_hash($this->request->getVar('newpassword'), PASSWORD_DEFAULT);
+        
+                    if (password_verify($oldpassword, $data['student_data']->password)) {
+                        if ($this->homeModel->editPasswordStudent(session()->get('loggedUser'), $newpassword)) {
+                            echo json_encode(['code' => 1, 'msg' => 'Votre mot de passe a été modifié avec succès']);
+                        } else {
+                            echo json_encode(['code' => 0, 'msg' => 'Une erreur est survenue...']);
+                        }
+                    } else {
+                        echo json_encode(['code' => 0, 'msg' => 'Ancien mot de passe incorrect...']);
+                    }
+                 
+                }
+            }elseif(session()->get('loggedUserRole') == 2){
+                $data['school_framer_data'] = $this->homeModel->getLoggedInSchoolFramerData($idUser); //Récupère toutes les infos du user
+
+                $this->validate([
+                    'oldpassword' => [
+                        'rules' => 'required|is_unique[comptes.pass]',
+                        'errors' => [
+                            'required' => 'Veuillez remplir le champs',
+                            'matches[comptes.pass]' => 'Ancien mot de passe incorrect',
+                        ],
+                    ],
+                    'newpassword' => [
+                        'rules' => 'required|min_length[6]|max_length[10]',
+                        'errors' => [
+                            'required' => 'Veuillez remplir le champs',
+                            'min_length' => 'Minimum 6 caractères',
+                            'max_length' => 'Pas au déla de 10 caractères'
+                        ],
+                    ],
+                    'cnewpassword' => [
+                        'rules' => 'required|matches[newpassword]',
+                        'errors' => [
+                            'required' => 'Veuillez remplir le champs',
+                            'matches' => "Mot de passe incompatible",
+                        ],
+                    ],
+                ]);
+        
+                if ($this->validation->run() == FALSE) {
+                    $errors = $this->validation->getErrors();
+                    echo json_encode(['error' => $errors]);
+                } else {
+                    $oldpassword = $this->request->getVar('oldpassword');
+
+                    $newpassword = password_hash($this->request->getVar('newpassword'), PASSWORD_DEFAULT);
+        
+                    if (password_verify($oldpassword, $data['school_framer_data']->pass)) {
+                        if ($this->homeModel->editPasswordSchoolFramer(session()->get('loggedUser'), $newpassword)) {
+                            echo json_encode(['code' => 1, 'msg' => 'Votre mot de passe a été modifié avec succès']);
+                        } else {
+                            echo json_encode(['code' => 0, 'msg' => 'Une erreur est survenue...']);
+                        }
+                    } else {
+                        echo json_encode(['code' => 0, 'msg' => 'Ancien mot de passe incorrect...']);
+                    }
+                 
+                }
+
+            }elseif(session()->get('loggedUserRole') == 3){
+                $data['industrial_framer_data'] = $this->homeModel->getLoggedInIndustrialFramerData($idUser); //Récupère toutes les infos du user
+
+                $this->validate([
+                    'oldpassword' => [
+                        'rules' => 'required|is_unique[enc_industriel.password]',
+                        'errors' => [
+                            'required' => 'Veuillez remplir le champs',
+                            'matches[enc_industriel.password]' => 'Ancien mot de passe incorrect',
+                        ],
+                    ],
+                    'newpassword' => [
+                        'rules' => 'required|min_length[6]|max_length[10]',
+                        'errors' => [
+                            'required' => 'Veuillez remplir le champs',
+                            'min_length' => 'Minimum 6 caractères',
+                            'max_length' => 'Pas au déla de 10 caractères'
+                        ],
+                    ],
+                    'cnewpassword' => [
+                        'rules' => 'required|matches[newpassword]',
+                        'errors' => [
+                            'required' => 'Veuillez remplir le champs',
+                            'matches' => "Mot de passe incompatible",
+                        ],
+                    ],
+                ]);
+        
+                if ($this->validation->run() == FALSE) {
+                    $errors = $this->validation->getErrors();
+                    echo json_encode(['error' => $errors]);
+                } else {
+                    $oldpassword = $this->request->getVar('oldpassword');
+
+                    $newpassword = password_hash($this->request->getVar('newpassword'), PASSWORD_DEFAULT);
+        
+                    if (password_verify($oldpassword, $data['industrial_framer_data']->password)) {
+                        if ($this->homeModel->editPasswordIndustrialFramer(session()->get('loggedUser'), $newpassword)) {
+                            echo json_encode(['code' => 1, 'msg' => 'Votre mot de passe a été modifié avec succès']);
+                        } else {
+                            echo json_encode(['code' => 0, 'msg' => 'Une erreur est survenue...']);
+                        }
+                    } else {
+                        echo json_encode(['code' => 0, 'msg' => 'Ancien mot de passe incorrect...']);
+                    }
+                 
+                }
+            }else{
+                
+            }
+        
+     
+    }
+
+
+    public function getVerificationTasksNotification()
+    {
+
+	
+        $idUser = session()->get('loggedUser');
+        $data['student_data']=[];
+        $data['school_framer_data']=[];
+        $data['industrial_framer_data']=[];
+
+       
+            if(session()->get('loggedUserRole') == 1){
+                $data['student_data'] = $this->homeModel->getLoggedInStudentData($idUser); //Récupère toutes les infos du user
+            }elseif(session()->get('loggedUserRole') == 2){
+                $data['school_framer_data'] = $this->homeModel->getLoggedInSchoolFramerData($idUser); //Récupère toutes les infos du user
+
+
+            }elseif(session()->get('loggedUserRole') == 3){
+                $ind_framer= $this->homeModel->getLoggedInIndustrialFramerData($idUser); //Récupère toutes les infos du user
+               $data['notif']= $this->homeModel->getVerificationTasksNotificationIndustrialFramer($ind_framer->id_enc);
+            }else{
+            }
+
+            echo json_encode($data);
+
+    }
+
+    public function updateNotif()
+    {
+
+	
+        $idUser = session()->get('loggedUser');
+        $data['student_data']=[];
+        $data['school_framer_data']=[];
+        $data['industrial_framer_data']=[];
+        $id = $this->request->getVar('id');
+
+
+       
+            if(session()->get('loggedUserRole') == 1){
+                $data['student_data'] = $this->homeModel->getLoggedInStudentData($idUser); //Récupère toutes les infos du user
+            }elseif(session()->get('loggedUserRole') == 2){
+                $data['school_framer_data'] = $this->homeModel->getLoggedInSchoolFramerData($idUser); //Récupère toutes les infos du user
+
+
+            }elseif(session()->get('loggedUserRole') == 3){
+                $ind_framer= $this->homeModel->getLoggedInIndustrialFramerData($idUser); //Récupère toutes les infos du user
+               $data['update']= $this->homeModel->updateNotif($id);
+            }else{
+            }
+
+            echo json_encode($data);
+
     }
 
 }

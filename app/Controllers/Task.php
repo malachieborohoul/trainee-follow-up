@@ -51,7 +51,9 @@ class Task extends BaseController
 		 * 
 		 */
 		foreach ($tasks as $task) {
-			if ($task['etat'] == 1)
+			if ($task['etat'] == 1 || $task['etat'] == 2 )
+			session()->set('currentTask', $task['id_tache']);
+
 				$count += 1;
 		}
 
@@ -118,11 +120,10 @@ class Task extends BaseController
 		} else {
 			$status = $this->taskModel->updateEtatToCompleted($taskId);
 			if ($status) {
-				session()->remove('currentTask');
-				echo json_encode(['code' => 1, 'msg' => "Vous avez terminé la tâche avec succès "]);
-			} else {
+				//Définir une session pour récupérer la tache courante
 				session()->set('currentTask', $taskId);
-				echo json_encode(['code' => 0, 'msg' => "Une erreur est survenue "]);
+			} else {
+				session()->remove('currentTask');
 			}
 		}
 	}
@@ -219,5 +220,126 @@ class Task extends BaseController
 				echo json_encode(['code' => 1, 'msg' => "Voulez avez déjà téléchargé un  fichier "]);
 			}
 		}
+	}
+
+
+	/**
+	 * Ajouter un commentaire
+	 *
+	 * @return void
+	 */
+	public function commenter()
+	{
+		$this->validate([
+			'message' => [
+				'rules' => 'required',
+				'errors' => [
+					'required' => 'Vous devez remplir le champs',
+				],
+			],
+		]);
+
+		if ($this->validation->run() == FALSE) {
+			$errors = $this->validation->getErrors();
+			echo json_encode(['error' => $errors]);
+		} else {
+			
+			// $idBlog = $this->request->getVar('idBlog');
+
+			if (session()->get('loggedUserRole') == 1) {
+				$dat = [
+					'commentaire' => $this->request->getVar('message'),
+					'id_etudiant' => session()->get('loggedUser'),
+					'id_tache' => session()->get('currentTask')
+				];
+				if ($this->taskModel->ajouterCommentaireEtudiant($dat)) {
+					/**
+					 * Cela va nous permettre de classer les articles populaires en fonction des commentaires
+					 */
+					// $nbrCom = $this->blogModel->getNombreAllComments($idBlog);
+					// $this->blogModel->incrementerNbrComment($nbrCom, $idBlog);
+					echo json_encode(['code' => 1, 'msg' => 'Commentaire ajouté']);
+				} else {
+					echo json_encode(['code' => 0, 'msg' => 'Une erreur est survenue...']);
+				}
+			}else if (session()->get('loggedUserRole') == 2){
+				$dat = [
+					'commentaire' => $this->request->getVar('message'),
+					'id_enc' => session()->get('loggedUser'),
+					'id_tache' => session()->get('currentTask')
+				];
+				if ($this->taskModel->ajouterCommentairePersonnel($dat)) {
+					/**
+					 * Cela va nous permettre de classer les articles populaires en fonction des commentaires
+					 */
+					// $nbrCom = $this->blogModel->getNombreAllComments($idBlog);
+					// $this->blogModel->incrementerNbrComment($nbrCom, $idBlog);
+					echo json_encode(['code' => 1, 'msg' => 'Commentaire ajouté']);
+				} else {
+					echo json_encode(['code' => 0, 'msg' => 'Une erreur est survenue...']);
+				}
+			}else if (session()->get('loggedUserRole') == 3){
+				$dat = [
+					'commentaire' => $this->request->getVar('message'),
+					'id_enc' => session()->get('loggedUser'),
+					'id_tache' => session()->get('currentTask')
+				];
+				if ($this->taskModel->ajouterCommentaireIndustriel($dat)) {
+					/**
+					 * Cela va nous permettre de classer les articles populaires en fonction des commentaires
+					 */
+					// $nbrCom = $this->blogModel->getNombreAllComments($idBlog);
+					// $this->blogModel->incrementerNbrComment($nbrCom, $idBlog);
+					echo json_encode(['code' => 1, 'msg' => 'Commentaire ajouté']);
+				} else {
+					echo json_encode(['code' => 0, 'msg' => 'Une erreur est survenue...']);
+				}
+			}
+		}
+	}
+
+
+	  /**
+     * Récupérer tous les commentaires
+     *
+     * @return void
+     */
+    public function getAllComments()
+    {
+        $id_tache=session()->get('currentTask');
+
+		// if(session()->get('loggedUserRole') == 1){
+		// 	$data['comment']=$this->taskModel->getAllCommentsEtudiant($id_tache,session()->get('loggedUser'));
+		// }else if(session()->get('loggedUserRole') == 2){
+		// 	$data['comment']=$this->taskModel->getAllCommentsPersonnel($id_tache,session()->get('loggedUser'));
+
+		// }else if(session()->get('loggedUserRole') == 3){
+		// 	$data['comment']=$this->taskModel->getAllCommentsIndustriel($id_tache,session()->get('loggedUser'));
+
+		// }
+		$data['comment']=$this->taskModel->getAllComments($id_tache);
+
+       
+        // $this->blogModel->initialiserVuReponse();
+
+        echo json_encode($data);
+
+    }
+
+	/**
+	 * Supprime un commentaire à partir de son id
+	 *
+	 * @return void
+	 */
+	public function deleteComment()
+	{
+		$commentaireId = $this->request->getPost('id');
+		$data['res']=$this->taskModel->deleteComment($commentaireId);
+		echo json_encode($data);
+	}
+
+	public function discussion()
+	{
+		return view('discussion_view');
 	}
 }

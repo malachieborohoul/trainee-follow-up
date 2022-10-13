@@ -3,7 +3,7 @@
 <?= $this->section('id_student') ?>
 <?php if (isset($student_data->id_etudiant)) : ?>
     <?= $student_data->id_etudiant ?>
-    <?php endif ?>
+<?php endif ?>
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
@@ -19,12 +19,35 @@
                             <?php if ($student_data) : ?>
                                 <?= $student_data->nom_prenom ?>
 
+                                <!-- En fonction du rôle on affiche le boutton Soumettre document -->
+                                <?= $this->section('role') ?>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/uploadFile">
+                                        <i class="icon-paper menu-icon"></i>
+                                        <span class="menu-title">Soumettre document</span>
+                                    </a>
+                                </li>
+                                <?= $this->endSection() ?>
+
                             <?php else : ?>
 
                             <?php endif; ?>
                             <!-- Encadreur école -->
                             <?php if ($school_framer_data) : ?>
                                 <?= $school_framer_data->speudo ?>
+                                <?= $this->section('role') ?>
+
+                                <?= $this->endSection() ?>
+
+                                <?= $this->section('id_framer') ?>
+                                <?php if (isset($school_framer_data->id_compte)) : ?>
+                                    <?= $school_framer_data->id_compte ?>
+                                <?php endif ?>
+                                <?= $this->endSection() ?>
+
+                                <?= $this->section('id_role') ?>
+                                <?= 2 ?>
+                                <?= $this->endSection() ?>
 
                             <?php else : ?>
 
@@ -33,6 +56,19 @@
                             <!-- Encadreur industriel -->
                             <?php if ($industrial_framer_data) : ?>
                                 <?= $industrial_framer_data->nom ?> <?= $industrial_framer_data->prenom ?>
+                                <?= $this->section('role') ?>
+                                <?= $this->endSection() ?>
+
+
+                                <?= $this->section('id_framer') ?>
+                                <?php if (isset($industrial_framer_data->id_enc)) : ?>
+                                    <?= $industrial_framer_data->id_enc ?>
+                                <?php endif ?>
+                                <?= $this->endSection() ?>
+
+                                <?= $this->section('id_role') ?>
+                                <?= 3 ?>
+                                <?= $this->endSection() ?>
 
                             <?php else : ?>
 
@@ -64,10 +100,14 @@
         <?php if ($student_data) : ?>
             <?= $this->include("/partials/tasks") ?>
 
-        <?php else : ?>
+        <?php elseif ($school_framer_data) : ?>
+            <?= $this->include("/partials/students") ?>
+        <?php elseif ($industrial_framer_data) : ?>
+            <?= $this->include("/partials/students") ?>
+
 
         <?php endif; ?>
-        
+
 
 
         <?= $this->include("/partials/slider") ?>

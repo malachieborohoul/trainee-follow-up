@@ -195,9 +195,9 @@
                         var visibilityItemTextStart = ""
 
                     }else  if (value['etat'] == 2){
-                        var str = 'badge badge-success ';
-                        var msg = 'Terminé';
-                        var colorTable = "table-success"
+                        var str = 'badge badge-primary ';
+                        var msg = 'Vérification';
+                        var colorTable = "table-secondary"
                         /**
                          * Si une tâche est en cours le dropdown est activé
                          */

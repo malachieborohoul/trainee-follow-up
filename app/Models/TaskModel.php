@@ -122,6 +122,75 @@ class TaskModel extends Model{
      }
    }
 
+   public function ajouterCommentaireEtudiant($data)
+   {
+     $builder=$this->db->table('commentaire');
+     $builder->insert($data);
+     if($this->db->affectedRows()==1)
+     {
+       return true;
+     }
+     else
+     {
+       return false;
+     }
+    
+ 
+   }
+
+   public function ajouterCommentairePersonnel($data)
+   {
+     $builder=$this->db->table('commentaire');
+     $builder->insert($data);
+     if($this->db->affectedRows()==1)
+     {
+       return true;
+     }
+     else
+     {
+       return false;
+     }
+    
+ 
+   }
+
+
+   public function ajouterCommentaireIndustriel($data)
+   {
+     $builder=$this->db->table('commentaire');
+     $builder->insert($data);
+     if($this->db->affectedRows()==1)
+     {
+       return true;
+     }
+     else
+     {
+       return false;
+     }
+    
+ 
+   }
+
+   public function getAllComments($id_tache,)
+  {
+    $builder=$this->db->table('commentaire');
+    // $builder->join('etudiants','commentaire.id_etudiant=etudiants.id_etudiant');
+    $builder->where('id_tache',$id_tache);
+    $builder->orderBy('id_commentaire','ASC');
+    $result=$builder->get();
+    return $result->getResultArray();
+
+  }
+
+
+  public function deleteComment($id)
+  {
+    $builder=$this->db->table('commentaire');
+    $builder->where('id_commentaire', $id);
+    $builder->delete();
+  }
+
+
 
 
   

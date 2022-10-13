@@ -155,6 +155,89 @@ class HomeModel extends Model{
        }
    }
 
+   public function editPasswordIndustrialFramer($idUsers, $pass)
+   {
+       $this->db=\Config\Database::connect();
+       $builder=$this->db->table('enc_industriel');
+       $builder->where('id_enc', $idUsers);
+       $builder->update(['password'=>$pass]);
+       if($this->db->affectedRows()==1)
+       {
+         return true;
+       }
+       else{
+         return false;
+       }
+   }
+   public function editPasswordSchoolFramer($idUsers, $pass)
+   {
+       $this->db=\Config\Database::connect();
+       $builder=$this->db->table('comptes');
+       $builder->where('id_compte', $idUsers);
+       $builder->update(['pass'=>$pass]);
+       if($this->db->affectedRows()==1)
+       {
+         return true;
+       }
+       else{
+         return false;
+       }
+   }
+
+   public function editPasswordStudent($idUsers, $pass)
+   {
+       $this->db=\Config\Database::connect();
+       $builder=$this->db->table('etudiants');
+       $builder->where('id_etudiant', $idUsers);
+       $builder->update(['password'=>$pass]);
+       if($this->db->affectedRows()==1)
+       {
+         return true;
+       }
+       else{
+         return false;
+       }
+   }
+
+
+   public function getVerificationTasksNotificationIndustrialFramer($id)
+    {
+        $this->db=\Config\Database::connect();
+        $builder=$this->db->table('taches');
+        $builder->select('*');
+        $builder->join('dossiers', 'dossiers.id_dossier=taches.id_dossier_stage');
+        $builder->join('etudiants', 'dossiers.etudiant_id=etudiants.id_etudiant');
+
+
+        $builder->where('etat', 2);
+        $builder->where('id_enc', $id);
+        $builder->where('notification', 0);
+        $result= $builder->get();
+       if(count($result->getResultArray())>=1)
+       {
+           return $result->getResultArray();
+       }
+       else{
+           return false;
+       }
+    }
+
+    public function updateNotif($id)
+    {
+        $this->db=\Config\Database::connect();
+        $builder=$this->db->table('taches');
+        $builder->where('id_tache', $id);
+        $builder->update(['notification'=>1]);
+        if($this->db->affectedRows()==1)
+        {
+          return true;
+        }
+        else
+        {
+          return false;
+        }
+    }
+
 
 
   

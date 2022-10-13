@@ -37,6 +37,20 @@ $routes->set404Override();
 // route since we don't have to scan directories.
 $routes->get('/', 'Home::index');
 $routes->get('/logout', 'Home::logout');
+$routes->get('/edit_profile', 'Home::editProfile');
+$routes->get('/getLoggedInUserPhoto', 'Home::getLoggedInUserPhoto');
+$routes->post('/editPassword', 'Home::editPassword');
+$routes->get('/getVerificationTasksNotification', 'Home::getVerificationTasksNotification');
+$routes->post('/updateNotif', 'Home::updateNotif');
+
+
+$routes->post('/getAllFramedStudents', 'Frame::getAllFramedStudents');
+$routes->post('/getTest', 'Frame::getTest');
+$routes->add('/internship_board/(:any)', 'Frame::internship_board/$1');
+
+
+
+
 $routes->get('/login', 'Login::index');
 $routes->get('/loginSchoolFramer', 'Login::loginSchoolFramer');
 $routes->get('/loginStudent', 'Login::loginStudent');
@@ -44,6 +58,8 @@ $routes->get('/getAllAcceptedFolders', 'Home::getAllAcceptedFolders');
 $routes->get('/fetchInProgressTask', 'Task::fetchInProgressTask');
 $routes->get('/uploadFile', 'Task::uploadFile');
 $routes->get('/checkTaskFileSubmitted', 'Task::checkTaskFileSubmitted');
+$routes->get('/getAllComments', 'Task::getAllComments');
+$routes->get('/discussion', 'Task::discussion');
 
 
 $routes->post('/sendMailIndustrialFramer', 'Home::sendMailIndustrialFramer');
@@ -56,6 +72,8 @@ $routes->post('/updateEtatToCompleted', 'Task::updateEtatToCompleted');
 $routes->post('/getAllTasks', 'Task::getAllTasks');
 $routes->post('/fetchInProgressTask', 'Task::fetchInProgressTask');
 $routes->post('/editTaskFile', 'Task::editTaskFile');
+$routes->post('/commenter', 'Task::commenter');
+$routes->post('/deleteComment', 'Task::deleteComment');
 
 
 

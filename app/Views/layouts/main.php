@@ -176,6 +176,18 @@
                 }
             });
         }
+
+
+        // function getVerificationTasksNotification() {
+        //     $.ajax({
+        //         method: "GET",
+        //         url: "/getVerificationTasksNotification",
+        //         dataType: "json",
+        //         success: function(response) {
+        //             // console.log(response.notif)
+        //         }
+        //     });
+        // }
     </script>
 
 
