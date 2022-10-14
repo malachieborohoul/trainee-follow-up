@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\FrameModel;
 use App\Models\HomeModel;
 use App\Models\TaskModel;
 
@@ -19,6 +20,7 @@ class Home extends BaseController
 
         // On instancie en créant un objet de type HomeModel
         $this->homeModel = new HomeModel();
+        $this->frameModel = new FrameModel();
         $this->taskModel = new TaskModel();
         $this->validation = \Config\Services::validation();
 
@@ -57,6 +59,11 @@ class Home extends BaseController
 
             }elseif(session()->get('loggedUserRole') == 3){
                 $data['industrial_framer_data'] = $this->homeModel->getLoggedInIndustrialFramerData($idUser); //Récupère toutes les infos du user
+                
+                // $students= $this->frameModel->getAllFramedStudentsIndustrialFrame($idUser);
+                // var_dump($students);
+                // die();
+                $data['students']= $this->frameModel->getAllFramedStudentsIndustrialFrame($idUser);
 
             }else{
                 return redirect()->to('/login');

@@ -6,6 +6,8 @@
 <?php endif ?>
 <?= $this->endSection() ?>
 
+
+
 <?= $this->section('content') ?>
 <!-- partial -->
 <div class="main-panel">

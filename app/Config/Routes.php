@@ -47,6 +47,7 @@ $routes->post('/updateNotif', 'Home::updateNotif');
 $routes->post('/getAllFramedStudents', 'Frame::getAllFramedStudents');
 $routes->post('/getTest', 'Frame::getTest');
 $routes->add('/internship_board/(:any)', 'Frame::internship_board/$1');
+$routes->post('/insertTask', 'Frame::insertTask');
 
 
 

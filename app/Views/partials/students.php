@@ -1,14 +1,84 @@
-
-
+<?php /*
+var_dump($students);
+die;*/
+?>
 <!-- List students -->
 
 <div class="row">
 
     <div class="col-md-12 grid-margin stretch-card">
         <div class="card">
+            <!-- /.card-header -->
+            <div class="card-header">
+                <button class="btn btn-success float-right" data-toggle="modal" data-target="#addTaskModal"><i class="fa fa-plus"></i>Ajouter une tache</button>
+
+                <!-- The Modal -->
+                <div class="modal" id="addTaskModal">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+
+                            <!-- Modal Header -->
+                            <div class="modal-header">
+                                <h4 class="modal-title justify-content">Ajouter une tache</h4>
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+
+                            <!-- Modal body -->
+                            <div class="modal-body">
+                                <div class="container">
+                                    <div class="row ">
+                                        <div class="col-md-12">
+
+
+
+                                            <form action="/insertTask" method="post" id="insertTask">
+                                                <div class="form-group ">
+                                                    <label>Nom de la tâche<span class="text-danger">*</span></label>
+                                                    <input type="text" name="tache" class="form-control tache">
+                                                    <span id='error_tache' class="text text-danger"></span>
+
+                                                </div>
+
+                                                <select class="form-control " name="etudiant" id="">
+                                                    <!-- <option value="<?php // $students->idE ?>">-------||--------</option> -->
+                                                    <?php foreach ($students as $stu) : ?>
+                                                        <option value="<?= $stu['id_dossier_stage'] ?>"><?= strtoupper($stu['nom_prenom']) ?></option>
+                                                    <?php endforeach; ?>
+                                                </select>
+
+
+
+                                                <div class="form-group ">
+
+                                                    <label>Date limite<span class="text-danger">*</span></label>
+                                                    <input type="date" name="dateLimite" class="form-control ">
+                                                    <span id='error_dateLimite' class="text text-danger"></span>
+
+                                                </div>
+
+
+                                                <button class="btn btn-primary float-right">Ajouter</button>
+
+
+
+                                            </form>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="card-body">
-            <p class="fs-30 mb-2 current_id " style="display:none ;" ><?= $this->renderSection('id_framer') ?></p>
-            <p class="fs-30 mb-2 current_id_role " style="display:none ;" ><?= $this->renderSection('id_role') ?></p>
+                <p class="fs-30 mb-2 current_id " style="display:none ;"><?= $this->renderSection('id_framer') ?></p>
+                <p class="fs-30 mb-2 current_id_role " style="display:none ;"><?= $this->renderSection('id_role') ?></p>
+
 
                 <p class="card-title mb-0">Etudiants à encadrer</p>
                 <div class="table-responsive">
@@ -90,15 +160,15 @@
                 var html = "";
 
                 $.each(response.students, function(key, value) {
-                
-                   
+
+
 
                     html +=
                         '<tr class="">\
                         <td class="studentId" style="display:none">' + value['id_etudiant'] + '</td>\
                         <td>' + value['matricule'] + '</td>\
                         <td>' + value['nom_prenom'] + '</td>\
-                        <td><a href="/internship_board/' + value['id_etudiant'] +'" class="btn btn-primary">Espace stage</a></td>\
+                        <td><a href="/internship_board/' + value['id_etudiant'] + '" class="btn btn-primary">Espace stage</a></td>\
                 </tr>'
 
 
@@ -148,6 +218,47 @@
             }
         });
     });
+
+     //Lorsqu'on clique sur ajouter pour ajouter une tache
+     $('#insertTask').submit(function(e) {
+      e.preventDefault();
+      var form = this
+      $.ajax({
+        method: $(form).attr('method'),
+        url: $(form).attr("action"),
+        data: new FormData(form),
+        dataType: "json",
+        processData: false,
+        contentType: false,
+        success: function(response) {
+          console.log(response.error)
+
+          if ($.isEmptyObject(response.error)) {
+            if (response.code == 1) {
+              $('.tache').html("");
+              $('.dateLimite').html("");
+              $('#addTaskModal').modal('hide');
+              alert(response.msg)
+            //   suc(response.msg)
+            //   getAllOffre();
+            //   $('.pagination').html('');
+            //   $('.total_data').html('');
+
+            } else {
+              alert(response.msg)
+            //   suc(response.msg)
+
+            }
+          } else {
+            $.each(response.error, function(prefix, val) {
+              $(form).find('span#error_' + prefix + '').text(val);
+            });
+          }
+        }
+      });
+
+    });
+
     //Lorsqu'on clique sur Annuler
 
 
@@ -205,11 +316,11 @@
             success: function(response) {
 
                 if (response.code == 0) {
-                    swal(""+response.msg+"", "Cliquer sur le boutton!", "error");
-                    
-                    
+                    swal("" + response.msg + "", "Cliquer sur le boutton!", "error");
+
+
                 } else {
-                    swal(""+response.msg+"", "Cliquer sur le boutton!", "success");
+                    swal("" + response.msg + "", "Cliquer sur le boutton!", "success");
 
                 }
                 $('.spinner').html("");

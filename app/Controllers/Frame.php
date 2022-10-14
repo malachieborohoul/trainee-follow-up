@@ -250,4 +250,60 @@ class Frame extends BaseController
 			}
 		}
 	}
+
+
+	
+	/**
+	 * Permet l'ajout d'une tâche 
+	 *
+	 * @return void
+	 */
+	public function insertTask()
+	{
+		$this->validate([
+			'tache' => [
+				'rules' => 'required',
+				'errors' => [
+					'required' => "Veuillez remplir le champ",
+
+				],
+			],
+
+			'dateLimite' => [
+				'rules' => 'required',
+				'errors' => [
+					'required' => "Veuillez choisir une date ",
+
+				],
+			],
+
+		]);
+
+		if ($this->validation->run() == FALSE) {
+			$errors = $this->validation->getErrors();
+			$data = [
+				'code' => 0,
+				'error' => $errors,
+			];
+			echo json_encode($data);
+		} else {
+			$idUsers = session()->get('loggedUser');
+
+			$dat = [
+				'tache' => $this->request->getPost('tache'),
+				'id_dossier_stage' => $this->request->getPost('etudiant'),
+				'date_limite' => $this->request->getPost('dateLimite'),
+
+				'id_enc' => $idUsers,
+			];
+			if ($this->frameModel->insertTask($dat)) {
+				$data = ['code' => 1, 'msg' => 'Tâche ajoutée'];
+				echo json_encode($data);
+			} else {
+				$data = ['code' => 0, 'msg' => 'Une erreur est survenue'];
+				echo json_encode($data);
+			}
+		}
+	}
+
 }

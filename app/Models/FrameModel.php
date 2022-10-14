@@ -148,6 +148,19 @@ class FrameModel extends Model{
    }
 
 
+   public function insertTask($data)
+   {
+     $builder=$this->db->table('taches');
+     $builder->insert($data);
+     if($this->db->affectedRows()==1)
+     {
+       return true;
+     }
+     else{
+       return false;
+     }
+   }
+
 
   
 
