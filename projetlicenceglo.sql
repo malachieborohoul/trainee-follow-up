@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : lun. 12 sep. 2022 à 13:32
+-- Généré le : sam. 15 oct. 2022 à 09:00
 -- Version du serveur : 10.4.24-MariaDB
 -- Version de PHP : 8.1.6
 
@@ -819,17 +819,21 @@ INSERT INTO `ci_sessions` (`id`, `ip_address`, `timestamp`, `data`) VALUES
 
 CREATE TABLE `commentaire` (
   `id_commentaire` int(11) NOT NULL,
-  `commenteur` varchar(60) NOT NULL,
-  `date` date NOT NULL,
-  `heure` time NOT NULL,
-  `destinée_a` varchar(60) NOT NULL,
+  `commentaire` text NOT NULL,
+  `date` datetime NOT NULL DEFAULT current_timestamp(),
   `id_tache` int(11) NOT NULL,
   `id_enc` int(11) NOT NULL,
-  `id_forum` int(11) NOT NULL,
-  `id` int(11) NOT NULL,
-  `id_personnel` int(11) NOT NULL,
-  `id_dossier` int(11) NOT NULL
+  `id_etudiant` int(11) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
+
+--
+-- Déchargement des données de la table `commentaire`
+--
+
+INSERT INTO `commentaire` (`id_commentaire`, `commentaire`, `date`, `id_tache`, `id_enc`, `id_etudiant`) VALUES
+(35, 'flefneglrgn', '2022-10-08 17:22:23', 2, 0, 1),
+(33, 'rkerfhiknzg', '2022-10-08 17:22:02', 2, 0, 1),
+(34, 'jbgjzejkg', '2022-10-08 17:22:14', 2, 3, 0);
 
 -- --------------------------------------------------------
 
@@ -889,7 +893,7 @@ INSERT INTO `comptes` (`id_compte`, `speudo`, `pass`, `personnel_id`, `statut`) 
 (10, 'examen', '388ad4e50a829ede0a27093ca8b4612e4918f80b780a145de0af349c0f1f1f65cbf5ad96191d7d21df149a36396fa76f74c9c3ae652d73dcec85fb378c1bb0caNTpwLy3W/pwokW1hjOqzBNvik2kRIa6o4F0rfg8ffXM=', 32, 1),
 (12, 'dompet', '29ed07e089b4360432b22397d43cab6e87025576cf0a2e68e50b791478364b9c39fd088161b8999d351761b4f70ba2fed7a118eb92f6c57dd7e5823920238323zhDvoCTrJHVTT0RSFoLyTeGMuAzhtGVBmO7YKuTj/zA=', 36, 1),
 (13, 'laurette', '337993ac006bb0ec4d86e38e925b8cbb15a817b197bff33290bebac7c661f1b4712c3640b3eefd7acf3d74d8d732f62e1afb06add29cf26a6c376f49780b590ai6t2RBPUKrIVhZOTMdiyGuAX8jCiDSyIteTQ3SPadns=', 37, 1),
-(14, 'test', '$2y$10$wyLnE/FHhi7WvxwVHaBQtuK.0TCIlKxZ8E5KT0Dr4/k/N0P9Clp5a', 18, 1);
+(14, 'test', '$2y$10$S6dHzc4Fq1.91GH1ExmBgeSG9AsyMrUj7JOnPArnql4If9ssdIXaq', 18, 1);
 
 -- --------------------------------------------------------
 
@@ -1576,7 +1580,7 @@ CREATE TABLE `enc_industriel` (
 --
 
 INSERT INTO `enc_industriel` (`id_enc`, `nom`, `prenom`, `email`, `password`, `tel`) VALUES
-(3, 'Talla', 'Simon', 'malachieborohoul@gmail.com', '$2y$10$wyLnE/FHhi7WvxwVHaBQtuK.0TCIlKxZ8E5KT0Dr4/k/N0P9Clp5a', 697140690);
+(3, 'Talla', 'Simon', 'malachieborohoul@gmail.com', '$2y$10$S6dHzc4Fq1.91GH1ExmBgeSG9AsyMrUj7JOnPArnql4If9ssdIXaq', 697140690);
 
 -- --------------------------------------------------------
 
@@ -1784,7 +1788,7 @@ CREATE TABLE `etudiants` (
 --
 
 INSERT INTO `etudiants` (`id_etudiant`, `nom_prenom`, `genre`, `matricule`, `password`, `nationalite`, `date_nais`, `lieu_nais`, `telephone`, `email`, `avatar`, `pack_sms`) VALUES
-(1, 'ABDOURRAZAK IBRAHIM MAHAMAT BELLO', 'M', '20I001IU', '$2y$10$rma8YjDbyCJIUVxUc9px/e.JtFe1cceZC.ZDpCezoyv4zvHEAq.eW', 'Camerounaise', '2002-08-25', 'GAROUA', '', '', 'default.png', 0),
+(1, 'ABDOURRAZAK IBRAHIM MAHAMAT BELLO', 'M', '20I001IU', '$2y$10$iD4w6V7ifQ4kkvc8PC1p6.8QUV7itDD5uiU.AmbQrSjWhbuT4/PDa', 'Camerounaise', '2002-08-25', 'GAROUA', '', '', 'default.png', 0),
 (2, 'ABOUBAKAR BRAHIM', 'M', '20I002IU', '$2y$10$sISynSRxTEIA/4ctagcSLOqFke82tUYRRJbOPOCh0qgf396Loljpa', 'Camerounaise', '1998-03-01', 'DOUBANE', '', '', 'default.png', 0),
 (3, 'AHMADOU OUSSEINI', 'M', '20I003IU', '$2y$10$pmmLt/GnHuy4asVn7pD44Oky7Q5rJpH18U4nbOmKhZlYNbcp1v1lm', 'Camerounaise', '1999-11-10', 'MBELLA ASSOM', '', '', 'default.png', 0),
 (4, 'AHMADOU ROUFAÏ', 'M', '20I004IU', '$2y$10$gHQY1.S87alnx.wPppPW4O01cd4bvpOgPxVbaKFz.ulNEjpu6AlgC', 'Camerounaise', '2004-11-01', 'NGAOUNDERE', '', '', 'default.png', 0),
@@ -5340,16 +5344,21 @@ CREATE TABLE `taches` (
   `id_enc` int(11) NOT NULL,
   `id_personnel` int(11) NOT NULL,
   `id_dossier_stage` int(11) NOT NULL,
-  `doc` varchar(255) NOT NULL
+  `doc` varchar(255) NOT NULL,
+  `notification` int(11) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
 
 --
 -- Déchargement des données de la table `taches`
 --
 
-INSERT INTO `taches` (`id_tache`, `tache`, `date_soumission`, `date_limite`, `etat`, `id_enc`, `id_personnel`, `id_dossier_stage`, `doc`) VALUES
-(1, 'Déssiner le diagramme de classe', '2022-09-11 00:00:00', '2022-09-13 00:00:00', 0, 3, 0, 1, ''),
-(2, 'Réaliser le cadrage pragmatique', '2022-09-11 00:00:00', '2022-09-14 00:00:00', 0, 3, 0, 1, 'http://localhost:8080/importer/taches/1662974114_d2b0bea36a01ab7facf2.pdf');
+INSERT INTO `taches` (`id_tache`, `tache`, `date_soumission`, `date_limite`, `etat`, `id_enc`, `id_personnel`, `id_dossier_stage`, `doc`, `notification`) VALUES
+(1, 'Déssiner le diagramme de classe', '2022-09-11 00:00:00', '2022-09-13 00:00:00', 0, 3, 0, 1, '', 0),
+(2, 'Réaliser le cadrage pragmatique', '2022-09-11 00:00:00', '2022-09-14 00:00:00', 2, 3, 0, 1, 'http://localhost:8080/importer/taches/1665074905_bb1026d70d77ba981d0b.pdf', 1),
+(5, 'dddd', '2022-10-14 02:42:52', '2022-10-19 00:00:00', 0, 3, 0, 1, '', 0),
+(6, 'ddjbdvjdd', '2022-10-14 02:44:40', '2022-10-21 00:00:00', 0, 3, 0, 1, '', 0),
+(7, 'ddjbdvjdd', '2022-10-14 02:45:27', '2022-10-21 00:00:00', 0, 3, 0, 2, '', 0),
+(8, 'pk', '2022-10-14 10:16:36', '2022-10-23 00:00:00', 0, 3, 0, 1, '', 0);
 
 -- --------------------------------------------------------
 
@@ -6049,7 +6058,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT pour la table `commentaire`
 --
 ALTER TABLE `commentaire`
-  MODIFY `id_commentaire` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_commentaire` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- AUTO_INCREMENT pour la table `document_stage`
@@ -6103,7 +6112,7 @@ ALTER TABLE `sujet_forum`
 -- AUTO_INCREMENT pour la table `taches`
 --
 ALTER TABLE `taches`
-  MODIFY `id_tache` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_tache` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT pour la table `users`
