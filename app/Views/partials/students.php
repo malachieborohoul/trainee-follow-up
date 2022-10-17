@@ -257,14 +257,18 @@ die;*/
                         $('.tache').html("");
                         $('.dateLimite').html("");
                         $('#addTaskModal').modal('hide');
-                        alert(response.msg)
+                        // alert(response.msg)
+                    swal("" + response.msg + "", "Cliquer sur le boutton!", "success");
+
                         //   suc(response.msg)
                         //   getAllOffre();
                         //   $('.pagination').html('');
                         //   $('.total_data').html('');
 
                     } else {
-                        alert(response.msg)
+                    swal("" + response.msg + "", "Cliquer sur le boutton!", "success");
+
+                        // alert(response.msg)
                         //   suc(response.msg)
 
                     }

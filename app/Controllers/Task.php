@@ -304,7 +304,7 @@ class Task extends BaseController
 			$task = $this->taskModel->checkTaskFileSubmittedFramer( session()->get('currentTask'));
 
 			if ($task['doc'] == "") {
-				echo json_encode(['code' => 2, 'msg' => "Aucune document n'a été soumis! "]);
+				echo json_encode(['code' => 2, 'msg' => "Aucun document n'a été soumis! "]);
 			} else {
 				echo json_encode([
 					'code' => 1, 

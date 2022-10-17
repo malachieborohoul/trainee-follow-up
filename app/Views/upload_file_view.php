@@ -30,7 +30,7 @@
 
             </div>
         </div>
-        <div class="role"><?=session()->get('loggedUserRole')?></div>
+        <div class="role" style="display: none;"><?=session()->get('loggedUserRole')?></div>
         <div class="container">
             <form action="/commenter" method="post" id="commenter">
                 <div class="row">

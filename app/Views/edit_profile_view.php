@@ -367,11 +367,13 @@
                             $('.oldpassword').val("");
                             $('.newpassword').val("");
                             $('.cnewpassword').val("");
-                            // swal(""+response.msg+"", "Cliquer sur le boutton!", "success");
-                            alert(response.msg)
+                            swal("" + response.msg + "", "Cliquer sur le boutton!", "success");
+                            // alert(response.msg)
 
                         } else {
-                            alert(response.msg)
+                            swal("" + response.msg + "", "Cliquer sur le boutton!", "success");
+
+                            // alert(response.msg)
 
                             // swal(""+response.msg+"", "Cliquer sur le boutton!", "error");
                         }

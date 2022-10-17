@@ -115,7 +115,9 @@
               $('.password').html('');
               window.location = '/';
             } else {
-              alert(response.msg)
+              swal("" + response.msg + "", "Cliquer sur le boutton!", "success");
+
+              // alert(response.msg)
             }
           } else {
             $.each(response.error, function(prefix, val) {

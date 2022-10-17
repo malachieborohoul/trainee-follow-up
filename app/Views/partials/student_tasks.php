@@ -79,6 +79,7 @@
                 <p class="card-title mb-0">Tâches à effectuer</p>
                 <br><br>
                 <a class="btn btn-primary " href="/discussion">Espace de discussion</a>
+                <h3 class="fichier float-right"></h3>
                 <div class="table-responsive">
                     <table class="table table-hover">
                         <thead>
@@ -132,10 +133,50 @@
     $(document).ready(function() {
         getAllTasks()
         fetchInProgressTask()
+        checkTaskFileSubmittedFramer()
         // Lancement du compte à rebours au chargement de la page
         // countdownManager.init();
 
     })
+
+       /** 
+    La définition de la fonction qui récupère toues les tâches de la base de données
+     */
+    function checkTaskFileSubmittedFramer() {
+
+
+
+$.ajax({
+    method: "GET",
+    url: "/checkTaskFileSubmittedFramer",
+
+    dataType: "json",
+
+    success: function(response) {
+        // console.log(response.file);
+
+        if (response.code == 0) {
+            // swal("" + response.msg + "", "Cliquer sur le boutton!", "error");
+            // setInterval(function() {
+            //     window.location.href = "/"
+            // }, 2000)
+
+
+        } else if (response.code == 1) {
+            $('.fichier').append("<a  href="+response.file.doc+"  class='btn btn-primary' download>Télécharger le document</a>")
+
+        } else if (response.code == 2) {
+            $('.fichier').append(response.msg)
+
+
+        } else {
+
+        }
+
+    }
+});
+}
+
 
     /** 
     La définition de la fonction qui récupère toues les tâches de la base de données
