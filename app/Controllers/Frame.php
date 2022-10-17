@@ -293,6 +293,7 @@ class Frame extends BaseController
 				'tache' => $this->request->getPost('tache'),
 				'id_dossier_stage' => $this->request->getPost('etudiant'),
 				'date_limite' => $this->request->getPost('dateLimite'),
+				'priorite' => $this->request->getPost('priorite'),
 
 				'id_enc' => $idUsers,
 			];

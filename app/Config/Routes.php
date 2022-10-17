@@ -59,6 +59,7 @@ $routes->get('/getAllAcceptedFolders', 'Home::getAllAcceptedFolders');
 $routes->get('/fetchInProgressTask', 'Task::fetchInProgressTask');
 $routes->get('/uploadFile', 'Task::uploadFile');
 $routes->get('/checkTaskFileSubmitted', 'Task::checkTaskFileSubmitted');
+$routes->get('/checkTaskFileSubmittedFramer', 'Task::checkTaskFileSubmittedFramer');
 $routes->get('/getAllComments', 'Task::getAllComments');
 $routes->get('/discussion', 'Task::discussion');
 
@@ -70,6 +71,7 @@ $routes->post('/logStudent', 'Login::logStudent');
 $routes->post('/updateEtatToInProgress', 'Task::updateEtatToInProgress');
 $routes->post('/updateEtatToCancel', 'Task::updateEtatToCancel');
 $routes->post('/updateEtatToCompleted', 'Task::updateEtatToCompleted');
+$routes->post('/updateEtatTaskValidated', 'Task::updateEtatTaskValidated');
 $routes->post('/getAllTasks', 'Task::getAllTasks');
 $routes->post('/fetchInProgressTask', 'Task::fetchInProgressTask');
 $routes->post('/editTaskFile', 'Task::editTaskFile');

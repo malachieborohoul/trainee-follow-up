@@ -44,6 +44,8 @@ class Home extends BaseController
         $data['school_framer_data']=[];
         $data['industrial_framer_data']=[];
 
+        
+
         /**
          * Vérifie si une session a été créée
          */

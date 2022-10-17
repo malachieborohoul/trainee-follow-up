@@ -55,6 +55,26 @@
 
     <div class="col-md-12 grid-margin stretch-card">
         <div class="card">
+
+            <!-- Modal -->
+            <div class="modal fade" id="valider" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <!-- Modal Header -->
+                        <!-- <div class="modal-header">
+                            <h4 class="modal-title justify-content">Ajouter une tache</h4>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div> -->
+                        <div class="modal-body">
+                            Voulez vous valider la tâche ?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" class="close" data-dismiss="modal">Non</button>
+                            <button type="button" class="btn btn-primary valideroui">Oui</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="card-body">
                 <p class="card-title mb-0">Tâches à effectuer</p>
                 <br><br>
@@ -122,7 +142,7 @@
      */
     function getAllTasks() {
         var id = $('.current_id').text();
-        
+
         $.ajax({
             method: "POST",
             url: "/getAllTasks",
@@ -155,7 +175,7 @@
                          * qui est un compteur sera supérieur à 0
                          * 
                          *  */
-                        var visibilityDropdown = response.visibility != 0 ? "display:none" : ""
+                        var button = "display:none"
                         /**
                          * Si etat aucune n'a démarré alors les visibilités des bouttons TERMINER et ANNULER seront
                          * désactivées et celle des texts seront activé
@@ -181,7 +201,7 @@
                         /**
                          * Si une tâche est en cours le dropdown est activé
                          */
-                        var visibilityDropdown = ""
+                        var button = "display:none"
                         /**
                          * Les bouttons TERMINER et ANNULER seront activés i.e cliquables
                          */
@@ -196,17 +216,17 @@
                         var visibilityItemLinkStart = "display:none"
                         var visibilityItemTextStart = ""
 
-                    }else  if (value['etat'] == 2){
+                    } else if (value['etat'] == 2) {
                         var str = 'badge badge-primary ';
                         var msg = 'Vérification';
                         var colorTable = "table-secondary"
                         /**
                          * Si une tâche est en cours le dropdown est activé
                          */
-                        var visibilityDropdown = ""
-                        /**
-                         * Les bouttons TERMINER et ANNULER seront activés i.e cliquables
-                         */
+                        var button = ''
+
+                        //  * Les bouttons TERMINER et ANNULER seront activés i.e cliquables
+
                         var visibilityItemLinkCancel = ""
                         var visibilityItemTextCancel = "display:none"
 
@@ -218,7 +238,27 @@
                         var visibilityItemLinkStart = "display:none"
                         var visibilityItemTextStart = ""
 
-                    }else{
+                    } else if (value['etat'] == 3) {
+                        var str = 'badge badge-success ';
+                        var msg = 'Terminé';
+                        var colorTable = "table-success"
+                        /**
+                         * Si une tâche est en cours le dropdown est activé
+                         */
+                        var button = 'display:none'
+
+                        //  * Les bouttons TERMINER et ANNULER seront activés i.e cliquables
+
+                        var visibilityItemLinkCancel = ""
+                        var visibilityItemTextCancel = "display:none"
+
+                        var visibilityItemLinkCompleted = "display:none"
+                        var visibilityItemTextCompleted = ""
+                        /** 
+                         * Le boutton de COMMENCER sera désactivé
+                         */
+                        var visibilityItemLinkStart = "display:none"
+                        var visibilityItemTextStart = ""
 
                     }
 
@@ -233,6 +273,7 @@
                             <div class="' + str + '">' + msg + '</div>\
                         </td>\
                         <td class="font-weight-medium">\
+                        <button  class="btn btn-success valider" data-toggle="modal" data-target="#valider" style=' + button + '>Valider</button>\
                         </td>\
                         <td class="spinner">\
                         </td>\
@@ -253,6 +294,72 @@
         });
     }
 
+    //Lorsqu'on clique sur Valider
+    var taskId;
+    $(document).on('click', '.valider', function() {
+         taskId = $(this).closest('tr').find('.taskId').text();
+        // alert(taskId);
+       
+        // $.ajax({
+        //     method: "POST",
+        //     url: "/updateEtatToInProgress",
+        //     data: {
+        //         'taskId': taskId
+        //     },
+        //     beforeSend: function() {
+        //         $(".spinner").append(
+        //             '<div class="spinner-border text-primary"  role="status">\
+        //         <span class="sr-only">Loading...</span>\
+        //     </div>'
+        //         );
+
+        //     },
+
+        //     success: function(response) {
+        //         $('.spinner').html("");
+        //         $('.tasksdata').html("");
+
+
+        //         getAllTasks();
+        //         fetchInProgressTask()
+
+        //     }
+        // });
+    });
+
+     //Lorsqu'on clique sur oui pour Valider 
+
+     $(document).on('click', '.valideroui', function() {
+        // var taskId = $(this).closest('tr').find('.taskId').text();
+        // alert(taskId);
+       
+        $.ajax({
+            method: "POST",
+            url: "/updateEtatTaskValidated",
+            data: {
+                'taskId': taskId
+            },
+            beforeSend: function() {
+                $(".spinner").append(
+                    '<div class="spinner-border text-primary"  role="status">\
+                <span class="sr-only">Loading...</span>\
+            </div>'
+                );
+
+            },
+
+            success: function(response) {
+                $('.spinner').html("");
+                $('.tasksdata').html("");
+                $('#valider').modal('toggle');
+
+
+                getAllTasks();
+                fetchInProgressTask()
+
+            }
+        });
+    });
     //Lorsqu'on clique sur Commencer
 
     $(document).on('click', '.start_btn', function() {

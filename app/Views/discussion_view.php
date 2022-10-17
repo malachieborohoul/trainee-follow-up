@@ -14,6 +14,7 @@
 <div class="main-panel">
     <div class="content-wrapper">
         <div class="notification"></div>
+        <h3 class="fichier"></h3>
         <!-- <div class="row">
             <div class="col-md-12 grid-margin">
                 <form action="/editTaskFile" method="post" id="importTaskFile">
@@ -65,7 +66,7 @@
 
 <script>
     $(document).ready(function() {
-        checkTaskFileSubmitted()
+        checkTaskFileSubmittedFramer()
         getAllComments();
         setInterval(function() {
             $('.notification').html('')
@@ -226,30 +227,32 @@
     /** 
     La définition de la fonction qui récupère toues les tâches de la base de données
      */
-    function checkTaskFileSubmitted() {
+    function checkTaskFileSubmittedFramer() {
 
 
 
         $.ajax({
             method: "GET",
-            url: "/checkTaskFileSubmitted",
+            url: "/checkTaskFileSubmittedFramer",
 
             dataType: "json",
 
             success: function(response) {
-                // console.log(response.task);
+                // console.log(response.file);
 
                 if (response.code == 0) {
-                    swal("" + response.msg + "", "Cliquer sur le boutton!", "error");
-                    setInterval(function() {
-                        window.location.href = "/"
-                    }, 2000)
+                    // swal("" + response.msg + "", "Cliquer sur le boutton!", "error");
+                    // setInterval(function() {
+                    //     window.location.href = "/"
+                    // }, 2000)
+
 
                 } else if (response.code == 1) {
-                    swal("" + response.msg + "", "Cliquer sur le boutton!", "success");
+                    $('.fichier').append("<a  href="+response.file.doc+"  class='btn btn-primary' download>Télécharger le document</a>")
 
                 } else if (response.code == 2) {
-                    swal("" + response.msg + "", "Cliquer sur le boutton!", "success");
+                    $('.fichier').append(response.msg)
+
 
                 } else {
 

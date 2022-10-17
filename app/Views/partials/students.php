@@ -38,13 +38,32 @@ die;*/
                                                     <span id='error_tache' class="text text-danger"></span>
 
                                                 </div>
+                                                <div class="form-group">
+                                                    <label>Nom de l'étudiant<span class="text-danger">*</span></label>
 
-                                                <select class="form-control " name="etudiant" id="">
-                                                    <!-- <option value="<?php // $students->idE ?>">-------||--------</option> -->
-                                                    <?php foreach ($students as $stu) : ?>
-                                                        <option value="<?= $stu['id_dossier_stage'] ?>"><?= strtoupper($stu['nom_prenom']) ?></option>
-                                                    <?php endforeach; ?>
-                                                </select>
+                                                    <select class="form-control " name="etudiant" id="">
+
+                                                        <!-- <option value="<?php // $students->idE 
+                                                                            ?>">-------||--------</option> -->
+                                                        <?php foreach ($students as $stu) : ?>
+                                                            <option value="<?= $stu['id_dossier_stage'] ?>"><?= strtoupper($stu['nom_prenom']) ?></option>
+                                                        <?php endforeach; ?>
+                                                    </select>
+
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label>Priorité<span class="text-danger">*</span></label>
+
+
+                                                    <select class="form-control " name="priorite" id="">
+                                                        <!-- <option value="<?php // $students->idE 
+                                                                            ?>">-------||--------</option> -->
+                                                        <option value="1">Haute</option>
+                                                        <option value="2">Moyenne</option>
+                                                        <option value="3">Basse</option>
+                                                    </select>
+                                                </div>
 
 
 
@@ -219,43 +238,43 @@ die;*/
         });
     });
 
-     //Lorsqu'on clique sur ajouter pour ajouter une tache
-     $('#insertTask').submit(function(e) {
-      e.preventDefault();
-      var form = this
-      $.ajax({
-        method: $(form).attr('method'),
-        url: $(form).attr("action"),
-        data: new FormData(form),
-        dataType: "json",
-        processData: false,
-        contentType: false,
-        success: function(response) {
-          console.log(response.error)
+    //Lorsqu'on clique sur ajouter pour ajouter une tache
+    $('#insertTask').submit(function(e) {
+        e.preventDefault();
+        var form = this
+        $.ajax({
+            method: $(form).attr('method'),
+            url: $(form).attr("action"),
+            data: new FormData(form),
+            dataType: "json",
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                console.log(response.error)
 
-          if ($.isEmptyObject(response.error)) {
-            if (response.code == 1) {
-              $('.tache').html("");
-              $('.dateLimite').html("");
-              $('#addTaskModal').modal('hide');
-              alert(response.msg)
-            //   suc(response.msg)
-            //   getAllOffre();
-            //   $('.pagination').html('');
-            //   $('.total_data').html('');
+                if ($.isEmptyObject(response.error)) {
+                    if (response.code == 1) {
+                        $('.tache').html("");
+                        $('.dateLimite').html("");
+                        $('#addTaskModal').modal('hide');
+                        alert(response.msg)
+                        //   suc(response.msg)
+                        //   getAllOffre();
+                        //   $('.pagination').html('');
+                        //   $('.total_data').html('');
 
-            } else {
-              alert(response.msg)
-            //   suc(response.msg)
+                    } else {
+                        alert(response.msg)
+                        //   suc(response.msg)
 
+                    }
+                } else {
+                    $.each(response.error, function(prefix, val) {
+                        $(form).find('span#error_' + prefix + '').text(val);
+                    });
+                }
             }
-          } else {
-            $.each(response.error, function(prefix, val) {
-              $(form).find('span#error_' + prefix + '').text(val);
-            });
-          }
-        }
-      });
+        });
 
     });
 

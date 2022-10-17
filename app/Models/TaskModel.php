@@ -106,12 +106,46 @@ class TaskModel extends Model{
      
    }
 
+   public function checkTaskFileSubmittedFramer( $idTask)
+   {
+
+     $builder=$this->db->table('taches');
+     $builder->select('*');
+    //  $builder->join('dossiers', 'dossiers.id_dossier=taches.id_dossier_stage');
+     $builder->where('id_tache', $idTask);
+    
+     $result= $builder->get();
+     if(count($result->getResultArray())==1)
+     {
+         return $result->getRowArray();
+     }
+     else{
+         return false;
+     }
+     
+   }
+
 
    public function updateEtatToCompleted($id)
    {
      $builder=$this->db->table('taches');
      $builder->where('id_tache', $id);
      $builder->update(['etat'=>2]);
+     if($this->db->affectedRows()==1)
+     {
+       return true;
+     }
+     else
+     {
+       return false;
+     }
+   }
+
+   public function updateEtatTaskValidated($id)
+   {
+     $builder=$this->db->table('taches');
+     $builder->where('id_tache', $id);
+     $builder->update(['etat'=>3]);
      if($this->db->affectedRows()==1)
      {
        return true;
@@ -171,7 +205,7 @@ class TaskModel extends Model{
  
    }
 
-   public function getAllComments($id_tache,)
+   public function getAllComments($id_tache)
   {
     $builder=$this->db->table('commentaire');
     // $builder->join('etudiants','commentaire.id_etudiant=etudiants.id_etudiant');

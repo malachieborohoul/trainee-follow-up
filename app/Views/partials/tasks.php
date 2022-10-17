@@ -63,6 +63,7 @@
                             <tr>
                                 <th>Tâche</th>
                                 <th>Date limite</th>
+                                <th>Priorité</th>
                                 <th>Etat</th>
                             </tr>
                         </thead>
@@ -131,6 +132,9 @@
 
             success: function(response) {
                 // console.log(response.visibility);
+                console.log(response.priorite);
+                console.log(response.date);
+                console.log(response.idTache);
                 var html = "";
 
                 $.each(response.tasks, function(key, value) {
@@ -153,7 +157,14 @@
                          * qui est un compteur sera supérieur à 0
                          * 
                          *  */
-                        var visibilityDropdown = response.visibility != 0 ? "display:none" : ""
+                        if(response.idTache==value['id_tache']){
+                        var visibilityDropdown =  ""
+
+                        }else{
+                            visibilityDropdown="display:none";
+                        }
+                        // var visibilityDropdown = response.visibility != 0 ? "display:none" : ""
+
                         /**
                          * Si etat aucune n'a démarré alors les visibilités des bouttons TERMINER et ANNULER seront
                          * désactivées et celle des texts seront activé
@@ -216,9 +227,39 @@
                         var visibilityItemLinkStart = "display:none"
                         var visibilityItemTextStart = ""
 
-                    }else{
+                    }else if (value['etat'] == 3) {
+                        var str = 'badge badge-success ';
+                        var msg = 'Terminé';
+                        var colorTable = "table-success"
+                        /**
+                         * Si une tâche est en cours le dropdown est activé
+                         */
+                        var visibilityDropdown = "display:none"
+
+                        //  * Les bouttons TERMINER et ANNULER seront activés i.e cliquables
+
+                        var visibilityItemLinkCancel = ""
+                        var visibilityItemTextCancel = "display:none"
+
+                        var visibilityItemLinkCompleted = "display:none"
+                        var visibilityItemTextCompleted = ""
+                        /** 
+                         * Le boutton de COMMENCER sera désactivé
+                         */
+                        var visibilityItemLinkStart = "display:none"
+                        var visibilityItemTextStart = ""
 
                     }
+
+                    var priorite=""
+                    if(value['priorite'] ==1){
+                        priorite="Haute"
+                    } else if(value['priorite'] ==2){
+                        priorite="Moyenne"
+                    }else{
+                        priorite="Basse"
+                    }
+
 
                    
 
@@ -227,6 +268,7 @@
                         <td class="taskId" style="display:none">' + value['id_tache'] + '</td>\
                         <td>' + value['tache'] + '</td>\
                         <td>' + value['date_limite'] + '</td>\
+                        <td>' + priorite + '</td>\
                         <td class="font-weight-medium">\
                             <div class="' + str + '">' + msg + '</div>\
                         </td>\

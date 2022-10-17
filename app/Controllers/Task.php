@@ -3,6 +3,8 @@
 namespace App\Controllers;
 
 use App\Models\TaskModel;
+use DateTime;
+use LengthException;
 
 use function PHPUnit\Framework\isEmpty;
 
@@ -33,13 +35,31 @@ class Task extends BaseController
 	public function getAllTasks()
 	{
 		$count = 0;
+		// $priorite=0;
+		$date = new DateTime("00-00-00 00:00:00");
+
+
+
+		// $d1=new DateTime("2022-10-16 21:53:16");
+		// $d2=new DateTime("2022-10-16 22:05:36");
+
+		// var_dump($d1==$d2);
+		// var_dump($d1<$d2);
+		// var_dump($d1>$d2);
+		// die;
+
+
+
 		/**
 		 * Rechercher toutes les taches en fonction de l'id de l'étudiant
 		 */
 		$id = $this->request->getVar('id');
 
+
 		$tasks = $this->taskModel->getAllTasks($id);
 		$data['tasks'] = $this->taskModel->getAllTasks($id);
+		$priorite = $tasks[0]['priorite'];
+		$idTache = $tasks[0]['id_tache'];
 
 		/**
 		 * La logique d'affichage du dropdown des action est telle que qu'on récupère
@@ -50,14 +70,40 @@ class Task extends BaseController
 		 * 
 		 * 
 		 */
+
 		foreach ($tasks as $task) {
-			if ($task['etat'] == 1 || $task['etat'] == 2 )
-			session()->set('currentTask', $task['id_tache']);
+
+			//Renvoie l'id de la tâche dont la priorité est la plus élevée et dont la tache n'est pas terminée
+			if ($task['priorite'] < $priorite && $task['etat'] != 3) {
+				$priorite = $task['priorite'];
+				$idTache = $task['id_tache'];
+			}
+
+
+
+
+
+			if ($task['etat'] == 1 || $task['etat'] == 2) {
+				session()->set('currentTask', $task['id_tache']);
 
 				$count += 1;
+			}
+
+
+			//Vérifie toutes tache par anciennété de
+			// if(new DateTime($task['date_soumission'])>$date){
+			// 	$date =new DateTime($task['date_soumission']);
+			// }
+
+
 		}
 
+
+
 		$data['visibility'] = $count;
+		$data['priorite'] = $priorite;
+		$data['date'] = $date;
+		$data['idTache'] = $idTache;
 
 		echo json_encode($data);
 	}
@@ -126,6 +172,24 @@ class Task extends BaseController
 				session()->remove('currentTask');
 			}
 		}
+	}
+
+	
+	/**
+	 * Elle permet de modifier le statut de la tache à 3 
+	 * M'encadreur valide la tache
+	 * @return void
+	 */
+	public function updateEtatTaskValidated()
+	{
+		$taskId = $this->request->getPost('taskId');
+
+		
+			$status = $this->taskModel->updateEtatTaskValidated($taskId);
+			if ($status) {
+				//Définir une session pour récupérer la tache courante
+				session()->remove('currentTask');
+			} 
 	}
 
 
@@ -217,10 +281,41 @@ class Task extends BaseController
 			if ($task['doc'] == "") {
 				echo json_encode(['code' => 2, 'msg' => "Veuillez télécharger le fichier ! "]);
 			} else {
-				echo json_encode(['code' => 1, 'msg' => "Voulez avez déjà téléchargé un  fichier "]);
+				echo json_encode([
+					'code' => 1, 
+					'msg' => "Voulez avez déjà téléchargé un  fichier ",
+					// 'file'=> $task
+				],);
 			}
 		}
 	}
+
+	
+	/**
+	 * Elle permet de vérifier si un fichier a été soumis pour une tâche en particulier
+	 *
+	 * @return void
+	 */
+	public function checkTaskFileSubmittedFramer()
+	{
+		if (!session()->has('currentTask')) {
+			echo json_encode(['code' => 0, 'msg' => "Aucune document n'a été soumis"]);
+		} else {
+			$task = $this->taskModel->checkTaskFileSubmittedFramer( session()->get('currentTask'));
+
+			if ($task['doc'] == "") {
+				echo json_encode(['code' => 2, 'msg' => "Aucune document n'a été soumis! "]);
+			} else {
+				echo json_encode([
+					'code' => 1, 
+					'msg' => "Voulez avez déjà téléchargé un  fichier ",
+					'file'=> $task
+				],);
+			}
+		}
+	}
+
+	
 
 
 	/**
@@ -243,7 +338,7 @@ class Task extends BaseController
 			$errors = $this->validation->getErrors();
 			echo json_encode(['error' => $errors]);
 		} else {
-			
+
 			// $idBlog = $this->request->getVar('idBlog');
 
 			if (session()->get('loggedUserRole') == 1) {
@@ -262,7 +357,7 @@ class Task extends BaseController
 				} else {
 					echo json_encode(['code' => 0, 'msg' => 'Une erreur est survenue...']);
 				}
-			}else if (session()->get('loggedUserRole') == 2){
+			} else if (session()->get('loggedUserRole') == 2) {
 				$dat = [
 					'commentaire' => $this->request->getVar('message'),
 					'id_enc' => session()->get('loggedUser'),
@@ -278,7 +373,7 @@ class Task extends BaseController
 				} else {
 					echo json_encode(['code' => 0, 'msg' => 'Une erreur est survenue...']);
 				}
-			}else if (session()->get('loggedUserRole') == 3){
+			} else if (session()->get('loggedUserRole') == 3) {
 				$dat = [
 					'commentaire' => $this->request->getVar('message'),
 					'id_enc' => session()->get('loggedUser'),
@@ -299,14 +394,14 @@ class Task extends BaseController
 	}
 
 
-	  /**
-     * Récupérer tous les commentaires
-     *
-     * @return void
-     */
-    public function getAllComments()
-    {
-        $id_tache=session()->get('currentTask');
+	/**
+	 * Récupérer tous les commentaires
+	 *
+	 * @return void
+	 */
+	public function getAllComments()
+	{
+		$id_tache = session()->get('currentTask');
 
 		// if(session()->get('loggedUserRole') == 1){
 		// 	$data['comment']=$this->taskModel->getAllCommentsEtudiant($id_tache,session()->get('loggedUser'));
@@ -317,14 +412,13 @@ class Task extends BaseController
 		// 	$data['comment']=$this->taskModel->getAllCommentsIndustriel($id_tache,session()->get('loggedUser'));
 
 		// }
-		$data['comment']=$this->taskModel->getAllComments($id_tache);
+		$data['comment'] = $this->taskModel->getAllComments($id_tache);
 
-       
-        // $this->blogModel->initialiserVuReponse();
 
-        echo json_encode($data);
+		// $this->blogModel->initialiserVuReponse();
 
-    }
+		echo json_encode($data);
+	}
 
 	/**
 	 * Supprime un commentaire à partir de son id
@@ -334,7 +428,7 @@ class Task extends BaseController
 	public function deleteComment()
 	{
 		$commentaireId = $this->request->getPost('id');
-		$data['res']=$this->taskModel->deleteComment($commentaireId);
+		$data['res'] = $this->taskModel->deleteComment($commentaireId);
 		echo json_encode($data);
 	}
 
